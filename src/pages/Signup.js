@@ -37,15 +37,6 @@ function Signup() {
     }
   };
 
-  const handleFacebookSignup = async () => {
-    try {
-      await signInWithPopup(auth, new FacebookAuthProvider());
-      alert('Berhasil daftar/login dengan Facebook.');
-      navigate('/');
-    } catch (error) {
-      alert('Gagal Facebook Signup: ' + error.message);
-    }
-  };
 
   return (
     <div className="signup-container">
