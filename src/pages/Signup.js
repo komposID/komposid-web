@@ -1,4 +1,3 @@
-// src/pages/Signup.js
 import React, { useState } from 'react';
 import './Signup.css';
 import { useNavigate } from 'react-router-dom';
@@ -6,10 +5,11 @@ import {
   createUserWithEmailAndPassword,
   signInWithPopup,
   GoogleAuthProvider,
-  FacebookAuthProvider
 } from 'firebase/auth';
-import { auth, db } from '../firebase';
-import { doc, setDoc } from 'firebase/firestore';
+import { auth } from '../firebase';
+import { getFirestore, setDoc, doc, serverTimestamp } from 'firebase/firestore';
+
+const db = getFirestore();
 
 function Signup() {
   const [name, setName] = useState('');
@@ -17,21 +17,21 @@ function Signup() {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const saveUserToFirestore = async (user, namaLengkap, role = "pengguna") => {
-    await setDoc(doc(db, "users", user.uid), {
-      uid: user.uid,
-      name: namaLengkap,
-      email: user.email,
-      role: role,
-      createdAt: new Date()
-    });
-  };
-
   const handleSignup = async (e) => {
     e.preventDefault();
     try {
-      const result = await createUserWithEmailAndPassword(auth, identifier, password);
-      await saveUserToFirestore(result.user, name);
+      const userCredential = await createUserWithEmailAndPassword(auth, identifier, password);
+      const user = userCredential.user;
+
+      // Simpan data ke Firestore
+      await setDoc(doc(db, 'users', user.uid), {
+        uid: user.uid,
+        name: name,
+        email: identifier,
+        role: 'pengguna',
+        createdAt: serverTimestamp(),
+      });
+
       alert('Pendaftaran berhasil! Silakan login.');
       navigate('/login');
     } catch (error) {
@@ -43,7 +43,17 @@ function Signup() {
     const provider = new GoogleAuthProvider();
     try {
       const result = await signInWithPopup(auth, provider);
-      await saveUserToFirestore(result.user, result.user.displayName);
+      const user = result.user;
+
+      // Simpan data Google user ke Firestore
+      await setDoc(doc(db, 'users', user.uid), {
+        uid: user.uid,
+        name: user.displayName,
+        email: user.email,
+        role: 'pengguna',
+        createdAt: serverTimestamp(),
+      });
+
       alert('Berhasil daftar/login dengan Google.');
       navigate('/');
     } catch (error) {
@@ -56,7 +66,7 @@ function Signup() {
       <div className="signup-card">
         <h2 className="signup-title">📝 Daftar Akun</h2>
         <p className="signup-subtitle">
-          Isi formulir untuk membuat akun baru di KomposID.
+          Formulir ini digunakan untuk semua jenis pendaftaran akun. Harap isi data dengan benar sesuai kebutuhan login Anda.
         </p>
 
         <form className="signup-form" onSubmit={handleSignup}>
@@ -76,7 +86,7 @@ function Signup() {
             <input
               type="email"
               id="identifier"
-              placeholder="email@domain.com"
+              placeholder="Contoh: email@domain.com"
               value={identifier}
               onChange={(e) => setIdentifier(e.target.value)}
               required
@@ -93,7 +103,6 @@ function Signup() {
               required
             />
           </div>
-
           <button type="submit">Daftar Sekarang</button>
         </form>
 
@@ -113,7 +122,8 @@ function Signup() {
           <a href="/login" className="signup-link">Login di sini</a>
         </p>
         <div className="signup-info-box">
-          <p><strong>🔒 Keamanan:</strong> Data Anda hanya digunakan untuk keperluan internal KomposID.</p>
+          <p><strong>🔒 Keamanan:</strong> Data Anda hanya digunakan untuk keperluan sistem internal KomposID.</p>
+          <p><strong>📌 Catatan:</strong> Tim kami akan memverifikasi pendaftaran sebelum akses penuh diberikan.</p>
         </div>
       </div>
     </div>
