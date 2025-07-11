@@ -1,12 +1,8 @@
 import React, { useState } from 'react';
 import './LoginAdmin.css';
 import { Link, useNavigate } from 'react-router-dom';
-import { auth } from '../firebase';
-import {
-  signInWithEmailAndPassword,
-  signInWithPopup,
-  GoogleAuthProvider,
-} from 'firebase/auth';
+import { auth, signInWithGoogleAndSync } from '../firebase';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 
 function LoginAdmin() {
   const [identifier, setIdentifier] = useState('');
@@ -26,10 +22,8 @@ function LoginAdmin() {
   };
 
   const handleGoogleLogin = async () => {
-    const provider = new GoogleAuthProvider();
     try {
-      await signInWithPopup(auth, provider);
-      alert('Berhasil login dengan Google.');
+      await signInWithGoogleAndSync(); // Sinkron ke Firestore
       navigate('/');
     } catch (error) {
       alert('Login Google gagal: ' + error.message);
@@ -66,32 +60,47 @@ function LoginAdmin() {
             />
           </div>
 
-          {errorMsg && <p style={{ color: 'red', fontSize: '0.85rem' }}>{errorMsg}</p>}
+          {errorMsg && (
+            <p style={{ color: 'red', fontSize: '0.85rem' }}>{errorMsg}</p>
+          )}
 
           <button type="submit">Masuk Sekarang</button>
         </form>
 
         <div style={{ marginTop: '12px' }}>
           <button onClick={handleGoogleLogin} style={styles.googleBtn}>
-<img
-  src="/assets/google-icon.png"
-  alt="Google"
-  style={styles.icon}
-/>
-
+            <img
+              src="/assets/google-icon.png"
+              alt="Google"
+              style={styles.icon}
+            />
             Login dengan Google
           </button>
         </div>
 
-        <div style={{ marginTop: '16px', fontSize: '0.9rem', textAlign: 'center' }}>
+        <div
+          style={{
+            marginTop: '16px',
+            fontSize: '0.9rem',
+            textAlign: 'center',
+          }}
+        >
           Belum punya akun?{' '}
           <Link to="/signup" style={{ color: '#1b5e20', fontWeight: 'bold' }}>
             Daftar di sini
           </Link>
         </div>
 
-        <p style={{ marginTop: '24px', fontSize: '0.85rem', color: '#555', textAlign: 'center' }}>
-          Akun login ini hanya diperuntukkan bagi mitra, investor, dan admin distribusi resmi.
+        <p
+          style={{
+            marginTop: '24px',
+            fontSize: '0.85rem',
+            color: '#555',
+            textAlign: 'center',
+          }}
+        >
+          Akun login ini hanya diperuntukkan bagi mitra, investor, dan admin
+          distribusi resmi.
         </p>
       </div>
     </div>
