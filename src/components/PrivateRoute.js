@@ -1,21 +1,21 @@
+// src/components/PrivateRoute.js
 import React from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 const PrivateRoute = ({ children, requiredRole }) => {
-  const { user, loading } = useAuth();
+  const { user, role, loading } = useAuth();
 
+  // ⏳ Tunggu context selesai loading
   if (loading) return <div>Loading...</div>;
 
-  // Belum login
-  if (!user) return <Navigate to="/login" />;
+  // ❌ Kalau belum login
+  if (!user) return <Navigate to="/login" replace />;
 
-  // Role tidak sesuai
-  if (requiredRole && user.role !== requiredRole) {
-    return <Navigate to="/" />;
-  }
+  // ❌ Kalau role tidak sesuai
+  if (requiredRole && role !== requiredRole) return <Navigate to="/" replace />;
 
-  // Akses diperbolehkan
+  // ✅ Akses diizinkan
   return children;
 };
 
