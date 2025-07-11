@@ -6,23 +6,27 @@ import Home from './pages/Home';
 import Produk from './pages/Produk';
 import GabungMitra from './pages/GabungMitra';
 import LoginAdmin from './pages/LoginAdmin';
-import Investor from './pages/Investor'; // ✅ Tambahan halaman Investor
-import Signup from './pages/Signup'; // Tambahkan import ini
+import Investor from './pages/Investor';
+import Signup from './pages/Signup';
+
+import { AuthProvider } from './context/AuthContext'; // ✅ Import AuthProvider
 
 function App() {
   return (
-    <Router>
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/produk" element={<Produk />} />
-        <Route path="/gabung" element={<GabungMitra />} />
-        <Route path="/login" element={<LoginAdmin />} />
-        <Route path="/investor" element={<Investor />} /> {/* ✅ Routing baru */}
-        <Route path="/signup" element={<Signup />} />
-      </Routes>
-      <Footer />
-    </Router>
+    <AuthProvider>
+      <Router>
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/produk" element={<Produk />} />
+          <Route path="/gabung" element={<GabungMitra />} />
+          <Route path="/login" element={<LoginAdmin />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/investor" element={<Investor />} />
+        </Routes>
+        <Footer />
+      </Router>
+    </AuthProvider>
   );
 }
 

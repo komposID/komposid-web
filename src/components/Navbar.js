@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext'; // ✅
 
 function Navbar() {
   const [isMobile, setIsMobile] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+  const { user, logout } = useAuth(); // ✅ akses login & logout
 
   useEffect(() => {
     const handleResize = () => {
@@ -19,6 +22,11 @@ function Navbar() {
     setMenuOpen(false); // Tutup menu saat navigasi
   }, [location]);
 
+  const handleLogout = async () => {
+    await logout();
+    navigate('/login');
+  };
+
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
   };
@@ -26,6 +34,14 @@ function Navbar() {
   const closeMenu = () => {
     setMenuOpen(false);
   };
+
+  const renderLink = (to, label) => (
+    <Link to={to} style={styles.link}>{label}</Link>
+  );
+
+  const renderMobileLink = (to, label) => (
+    <Link to={to} style={styles.mobileLink} onClick={closeMenu}>{label}</Link>
+  );
 
   return (
     <>
@@ -58,20 +74,28 @@ function Navbar() {
               }}
             >
               <div style={styles.closeButton} onClick={closeMenu}>✕</div>
-              <Link to="/" style={styles.mobileLink} onClick={closeMenu}>🏠 Home</Link>
-              <Link to="/produk" style={styles.mobileLink} onClick={closeMenu}>🛒 Produk</Link>
-              <Link to="/gabung" style={styles.mobileLink} onClick={closeMenu}>🤝 Gabung Mitra</Link>
-              <Link to="/investor" style={styles.mobileLink} onClick={closeMenu}>💼 Investor</Link>
-              <Link to="/login" style={styles.mobileLink} onClick={closeMenu}>🔐 Login Admin</Link>
+              {renderMobileLink("/", "🏠 Home")}
+              {renderMobileLink("/produk", "🛒 Produk")}
+              {renderMobileLink("/gabung", "🤝 Gabung Mitra")}
+              {renderMobileLink("/investor", "💼 Investor")}
+              {user ? (
+                <div onClick={() => { closeMenu(); handleLogout(); }} style={styles.mobileLink}>🔓 Logout</div>
+              ) : (
+                renderMobileLink("/login", "🔐 Login Admin")
+              )}
             </div>
           </>
         ) : (
           <div style={styles.desktopLinks}>
-            <Link to="/" style={styles.link}>Home</Link>
-            <Link to="/produk" style={styles.link}>Produk</Link>
-            <Link to="/gabung" style={styles.link}>Gabung Mitra</Link>
-            <Link to="/investor" style={styles.link}>Investor</Link>
-            <Link to="/login" style={styles.link}>Login Admin</Link>
+            {renderLink("/", "Home")}
+            {renderLink("/produk", "Produk")}
+            {renderLink("/gabung", "Gabung Mitra")}
+            {renderLink("/investor", "Investor")}
+            {user ? (
+              <div onClick={handleLogout} style={{ ...styles.link, cursor: 'pointer' }}>Logout</div>
+            ) : (
+              renderLink("/login", "Login Admin")
+            )}
           </div>
         )}
       </nav>
