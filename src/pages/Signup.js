@@ -1,13 +1,7 @@
-// src/pages/Signup.js
 import React, { useState } from 'react';
 import './Signup.css';
 import { useNavigate } from 'react-router-dom';
-import {
-  createUserWithEmailAndPassword,
-  signInWithPopup,
-  GoogleAuthProvider,
-  FacebookAuthProvider,
-} from 'firebase/auth';
+import { createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { auth } from '../firebase';
 
 function Signup() {
@@ -28,8 +22,9 @@ function Signup() {
   };
 
   const handleGoogleSignup = async () => {
+    const provider = new GoogleAuthProvider();
     try {
-      await signInWithPopup(auth, new GoogleAuthProvider());
+      await signInWithPopup(auth, provider);
       alert('Berhasil daftar/login dengan Google.');
       navigate('/');
     } catch (error) {
@@ -37,13 +32,12 @@ function Signup() {
     }
   };
 
-
   return (
     <div className="signup-container">
       <div className="signup-card">
         <h2 className="signup-title">📝 Daftar Akun</h2>
         <p className="signup-subtitle">
-          Formulir ini digunakan untuk semua jenis pendaftaran akun.
+          Formulir ini digunakan untuk semua jenis pendaftaran akun. Harap isi data dengan benar sesuai kebutuhan login Anda.
         </p>
 
         <form className="signup-form" onSubmit={handleSignup}>
@@ -58,6 +52,7 @@ function Signup() {
               required
             />
           </div>
+
           <div className="form-group">
             <label htmlFor="identifier">📧 Email</label>
             <input
@@ -71,7 +66,7 @@ function Signup() {
           </div>
 
           <div className="form-group">
-            <label htmlFor="password">🔑 Password</label>
+            <label htmlFor="password">🔑 Buat Password</label>
             <input
               type="password"
               id="password"
@@ -88,19 +83,21 @@ function Signup() {
         <div style={{ margin: '16px 0' }}>
           <button onClick={handleGoogleSignup} style={styles.socialBtn}>
             <img
-              src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+              src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png"
               alt="Google"
               style={styles.icon}
             />
-            Daftar mudah dengan Google
+            Daftar / Login dengan Google
           </button>
         </div>
 
         <p className="signup-footer-note">
-          Sudah punya akun? <a href="/login" className="signup-link">Login di sini</a>
+          Sudah punya akun?{' '}
+          <a href="/login" className="signup-link">Login di sini</a>
         </p>
         <div className="signup-info-box">
-          <p><strong>🔒 Keamanan:</strong> Data Anda hanya digunakan untuk sistem internal KomposID.</p>
+          <p><strong>🔒 Keamanan:</strong> Data Anda hanya digunakan untuk keperluan sistem internal KomposID.</p>
+          <p><strong>📌 Catatan:</strong> Tim kami akan memverifikasi pendaftaran sebelum akses penuh diberikan.</p>
         </div>
       </div>
     </div>
@@ -125,9 +122,9 @@ const styles = {
     cursor: 'pointer',
   },
   icon: {
-    width: '20px',
-    height: '20px',
-    marginRight: '10px',
+    width: '18px',
+    height: '18px',
+    marginRight: '8px',
   },
 };
 
