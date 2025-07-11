@@ -16,6 +16,7 @@ import InvestorPanel from './pages/InvestorPanel';
 
 import { AuthProvider } from './context/AuthContext';
 import PrivateRoute from './components/PrivateRoute';
+import AdminRoute from './components/AdminRoute'; // ✅ Tambahkan import ini
 
 function App() {
   return (
@@ -32,15 +33,19 @@ function App() {
           <Route path="/signup" element={<Signup />} />
           <Route path="/investor" element={<Investor />} />
 
-          {/* 🔒 Role-based Routing */}
-          <Route
-            path="/dashboard"
-            element={
-              <PrivateRoute requiredRole="admin">
-                <Dashboard />
-              </PrivateRoute>
-            }
-          />
+          {/* ❌ Halaman jika role tidak diizinkan */}
+          <Route path="/unauthorized" element={
+            <div style={{ padding: '2rem', textAlign: 'center' }}>
+              ❌ Akses ditolak. Anda tidak memiliki izin untuk halaman ini.
+            </div>
+          } />
+
+          {/* 🔐 Hanya admin bisa akses */}
+          <Route element={<AdminRoute />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+          </Route>
+
+          {/* 🔐 Role-based untuk mitra & investor */}
           <Route
             path="/mitra-panel"
             element={
