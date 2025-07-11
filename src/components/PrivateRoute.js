@@ -1,22 +1,21 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Navigate } from 'react-router-dom';
-import { AuthContext } from '../context/AuthContext';
+import { useAuth } from '../context/AuthContext';
 
 const PrivateRoute = ({ children, requiredRole }) => {
-  const { user, loading } = useContext(AuthContext);
+  const { user, loading } = useAuth();
 
-  if (loading) {
-    return <div style={{ textAlign: 'center', marginTop: '40px' }}>🔄 Memuat...</div>;
-  }
+  if (loading) return <div>Loading...</div>;
 
-  if (!user) {
-    return <Navigate to="/login" />;
-  }
+  // Belum login
+  if (!user) return <Navigate to="/login" />;
 
+  // Role tidak sesuai
   if (requiredRole && user.role !== requiredRole) {
-    return <Navigate to="/" />; // atau redirect ke halaman khusus jika ingin
+    return <Navigate to="/" />;
   }
 
+  // Akses diperbolehkan
   return children;
 };
 

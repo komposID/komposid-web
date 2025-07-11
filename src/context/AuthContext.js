@@ -1,51 +1,49 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { onAuthStateChanged } from 'firebase/auth';
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
 import { auth, db } from '../firebase';
 
-// Buat context
 const AuthContext = createContext();
 
-// Provider context
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const logout = async () => {
+    await signOut(auth);
+    setUser(null);
+  };
+
   useEffect(() => {
-    // Pantau perubahan status login user
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
         try {
-          const docRef = doc(db, 'users', firebaseUser.uid);
-          const docSnap = await getDoc(docRef);
-
-          if (docSnap.exists()) {
-            setUser({ uid: firebaseUser.uid, ...docSnap.data() });
+          const userRef = doc(db, 'users', firebaseUser.uid);
+          const userSnap = await getDoc(userRef);
+          if (userSnap.exists()) {
+            setUser({ uid: firebaseUser.uid, ...userSnap.data() });
           } else {
-            setUser(null); // Tidak ditemukan di Firestore
+            console.warn('Data Firestore user tidak ditemukan.');
+            setUser(null);
           }
         } catch (error) {
-          console.error('Gagal mengambil data user dari Firestore:', error.message);
+          console.error('Gagal ambil user dari Firestore:', error);
           setUser(null);
         }
       } else {
-        setUser(null); // Tidak ada user yang login
+        setUser(null);
       }
       setLoading(false);
     });
 
-    return () => unsubscribe(); // Bersihkan listener saat unmount
+    return () => unsubscribe();
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, loading }}>
+    <AuthContext.Provider value={{ user, loading, logout }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
-// Custom hook untuk akses data user dari context
 export const useAuth = () => useContext(AuthContext);
-
-// Export context secara eksplisit untuk kebutuhan lainnya
-export { AuthContext };
