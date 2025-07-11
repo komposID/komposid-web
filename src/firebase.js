@@ -1,4 +1,5 @@
 // src/firebase.js
+
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
@@ -12,7 +13,9 @@ const firebaseConfig = {
   appId: "1:299033658119:web:ac8b3d720a7f5e6497bba2"
 };
 
+// Inisialisasi Firebase
 const app = initializeApp(firebaseConfig);
 
+// Inisialisasi layanan
 export const auth = getAuth(app);
 export const db = getFirestore(app);

@@ -6,10 +6,8 @@ import {
   signInWithPopup,
   GoogleAuthProvider,
 } from 'firebase/auth';
-import { auth } from '../firebase';
-import { getFirestore, setDoc, doc, serverTimestamp } from 'firebase/firestore';
-
-const db = getFirestore();
+import { auth, db } from '../firebase';
+import { setDoc, doc, serverTimestamp } from 'firebase/firestore';
 
 function Signup() {
   const [name, setName] = useState('');
@@ -23,7 +21,6 @@ function Signup() {
       const userCredential = await createUserWithEmailAndPassword(auth, identifier, password);
       const user = userCredential.user;
 
-      // Simpan data ke Firestore
       await setDoc(doc(db, 'users', user.uid), {
         uid: user.uid,
         name: name,
@@ -45,7 +42,6 @@ function Signup() {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
 
-      // Simpan data Google user ke Firestore
       await setDoc(doc(db, 'users', user.uid), {
         uid: user.uid,
         name: user.displayName,
