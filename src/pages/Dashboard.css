@@ -1,60 +1,68 @@
 .dashboard-container {
-  padding: 20px;
-  max-width: 100%;
-  overflow-x: auto;
+  padding: 24px;
+  background-color: #f8f9fa;
+  min-height: 100vh;
 }
 
 .dashboard-title {
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   color: #1b5e20;
-  margin-bottom: 4px;
   font-weight: bold;
+  margin-bottom: 6px;
 }
 
 .dashboard-note {
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   color: #555;
   margin-bottom: 20px;
 }
 
-.table-wrapper {
+.table-container {
   overflow-x: auto;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 0 8px rgba(0,0,0,0.05);
 }
 
 .user-table {
   width: 100%;
   border-collapse: collapse;
-  border: 1px solid #ccc;
+  font-size: 0.95rem;
 }
 
 .user-table th,
 .user-table td {
-  padding: 10px;
+  border: 1px solid #ddd;
+  padding: 12px;
   text-align: left;
-  border: 1px solid #ccc;
-  font-size: 0.95rem;
 }
 
 .user-table th {
   background-color: #e8f5e9;
   color: #1b5e20;
-  font-weight: 600;
+  font-weight: bold;
 }
 
 .user-table tr:nth-child(even) {
-  background-color: #f9f9f9;
+  background-color: #f4f4f4;
 }
 
 .delete-btn {
-  background-color: #c62828;
+  background-color: #d32f2f;
   color: white;
   border: none;
   padding: 6px 12px;
-  border-radius: 4px;
+  border-radius: 5px;
   cursor: pointer;
-  font-size: 0.85rem;
+  transition: background 0.3s ease;
 }
 
 .delete-btn:hover {
   background-color: #b71c1c;
+}
+
+.empty {
+  text-align: center;
+  color: #888;
+  font-style: italic;
 }
