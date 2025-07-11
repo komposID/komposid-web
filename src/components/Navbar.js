@@ -132,3 +132,138 @@ function Navbar() {
     </nav>
   );
 }
+const styles = {
+  navbar: {
+    backgroundColor: '#1b5e20',
+    color: '#fff',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: '12px 20px',
+    position: 'sticky',
+    top: 0,
+    zIndex: 2000,
+  },
+  left: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  brandWrapper: {
+    display: 'flex',
+    alignItems: 'center',
+    textDecoration: 'none',
+    color: '#fff',
+  },
+  logo: {
+    height: '40px',
+    marginRight: '10px',
+  },
+  brand: {
+    fontSize: '1.5rem',
+    fontWeight: 'bold',
+  },
+  desktopLinks: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '16px',
+  },
+  link: {
+    color: '#fff',
+    textDecoration: 'none',
+    fontWeight: '500',
+    padding: '8px 14px',
+    borderRadius: '6px',
+  },
+  username: {
+    fontWeight: 'bold',
+    color: '#f0f0f0',
+    fontSize: '0.95rem',
+  },
+  roleTextDesktop: {
+    fontSize: '0.75rem',
+    color: '#d9f2d9',
+  },
+  avatarDesktop: {
+    width: '34px',
+    height: '34px',
+    borderRadius: '50%',
+    objectFit: 'cover',
+  },
+  hamburger: {
+    display: 'flex',
+    flexDirection: 'column',
+    cursor: 'pointer',
+    gap: '4px',
+  },
+  bar: {
+    width: '25px',
+    height: '3px',
+    backgroundColor: '#fff',
+  },
+  mobileMenu: {
+    position: 'fixed',
+    top: 0,
+    right: 0,
+    width: '75%',
+    height: '100vh',
+    backgroundColor: '#f0f0f0',
+    color: '#333',
+    display: 'flex',
+    flexDirection: 'column',
+    padding: '20px',
+    gap: '14px',
+    zIndex: 2001,
+    boxShadow: '-3px 0 8px rgba(0,0,0,0.2)',
+    transition: 'right 0.3s ease-in-out',
+  },
+  mobileHeader: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '12px',
+    paddingBottom: '8px',
+  },
+  avatar: {
+    width: '44px',
+    height: '44px',
+    borderRadius: '50%',
+    objectFit: 'cover',
+  },
+  mobileUser: {
+    fontSize: '1rem',
+    fontWeight: 'bold',
+    color: '#1b5e20',
+  },
+  roleText: {
+    fontSize: '0.85rem',
+    color: '#555',
+    marginTop: '2px',
+  },
+  separator: {
+    borderBottom: '1px solid #ccc',
+    margin: '12px 0',
+  },
+  mobileLink: {
+    fontSize: '1.1rem',
+    padding: '10px',
+    textDecoration: 'none',
+    borderBottom: '1px solid #ccc',
+    color: '#1b5e20',
+  },
+  closeButton: {
+    alignSelf: 'flex-end',
+    fontSize: '1.5rem',
+    cursor: 'pointer',
+    color: '#1b5e20',
+  },
+  overlay: {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    width: '100vw',
+    height: '100vh',
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    zIndex: 2000,
+  },
+};
+
+export default Navbar;
