@@ -92,7 +92,7 @@ function Signup() {
               alt="Google"
               style={styles.icon}
             />
-            Daftar dengan Google
+            Daftar mudah dengan Google
           </button>
         </div>
 
