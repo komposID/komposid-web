@@ -1,3 +1,4 @@
+// src/context/AuthContext.js
 import { createContext, useContext, useEffect, useState } from "react";
 import { auth } from "../firebase";
 import { onAuthStateChanged, signOut } from "firebase/auth";
@@ -8,7 +9,7 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [role, setRole] = useState(null);
+  const [userData, setUserData] = useState(null); // 🔁 Menyimpan nama, email, role, dsb
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -16,21 +17,16 @@ export const AuthProvider = ({ children }) => {
       if (firebaseUser) {
         setUser(firebaseUser);
 
-        try {
-          const userDoc = await getDoc(doc(db, "users", firebaseUser.uid));
-          if (userDoc.exists()) {
-            const data = userDoc.data();
-            setRole(data?.role || "pengguna");
-          } else {
-            setRole("pengguna");
-          }
-        } catch (error) {
-          console.error("❌ Gagal mengambil role:", error);
-          setRole("pengguna");
+        // 🔁 Ambil data dari Firestore (users collection)
+        const userDoc = await getDoc(doc(db, "users", firebaseUser.uid));
+        if (userDoc.exists()) {
+          setUserData(userDoc.data()); // nama, email, role, dll
+        } else {
+          setUserData(null);
         }
       } else {
         setUser(null);
-        setRole(null);
+        setUserData(null);
       }
       setLoading(false);
     });
@@ -41,7 +37,7 @@ export const AuthProvider = ({ children }) => {
   const logout = () => signOut(auth);
 
   return (
-    <AuthContext.Provider value={{ user, role, logout, loading }}>
+    <AuthContext.Provider value={{ user, userData, logout, loading }}>
       {children}
     </AuthContext.Provider>
   );

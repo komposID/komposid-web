@@ -1,48 +1,36 @@
 // src/components/Navbar.js
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext'; // ✅
+import { useAuth } from '../context/AuthContext';
 
 function Navbar() {
   const [isMobile, setIsMobile] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  const { user, role, logout } = useAuth(); // ✅ akses login, role, logout
+  const { user, userData, logout } = useAuth(); // Tambahan userData ✅
 
   useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
     handleResize();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  useEffect(() => {
-    setMenuOpen(false);
-  }, [location]);
+  useEffect(() => setMenuOpen(false), [location]);
 
   const handleLogout = async () => {
     await logout();
     navigate('/login');
   };
 
-  const toggleMenu = () => setMenuOpen(!menuOpen);
-  const closeMenu = () => setMenuOpen(false);
-
   const renderLink = (to, label) => (
     <Link to={to} style={styles.link}>{label}</Link>
   );
 
   const renderMobileLink = (to, label) => (
-    <Link to={to} style={styles.mobileLink} onClick={closeMenu}>{label}</Link>
+    <Link to={to} style={styles.mobileLink} onClick={() => setMenuOpen(false)}>{label}</Link>
   );
-
-  // 🔍 Debug role
-  useEffect(() => {
-    console.log("🔐 Role login:", role);
-  }, [role]);
 
   return (
     <>
@@ -60,28 +48,28 @@ function Navbar() {
 
         {isMobile ? (
           <>
-            <div style={styles.hamburger} onClick={toggleMenu}>
+            <div style={styles.hamburger} onClick={() => setMenuOpen(!menuOpen)}>
               <div style={styles.bar}></div>
               <div style={styles.bar}></div>
               <div style={styles.bar}></div>
             </div>
 
-            {menuOpen && <div style={styles.overlay} onClick={closeMenu}></div>}
+            {menuOpen && <div style={styles.overlay} onClick={() => setMenuOpen(false)}></div>}
 
-            <div
-              style={{
-                ...styles.mobileMenu,
-                right: menuOpen ? '0' : '-100%',
-              }}
-            >
-              <div style={styles.closeButton} onClick={closeMenu}>✕</div>
+            <div style={{
+              ...styles.mobileMenu,
+              right: menuOpen ? '0' : '-100%',
+            }}>
+              <div style={styles.closeButton} onClick={() => setMenuOpen(false)}>✕</div>
               {renderMobileLink("/", "🏠 Home")}
               {renderMobileLink("/produk", "🛒 Produk")}
               {renderMobileLink("/gabung", "🤝 Gabung Mitra")}
               {renderMobileLink("/investor", "💼 Investor")}
-              {user && role === 'admin' && renderMobileLink("/dashboard", "📊 Dashboard")}
               {user ? (
-                <div onClick={() => { closeMenu(); handleLogout(); }} style={styles.mobileLink}>🔓 Logout</div>
+                <>
+                  <div style={styles.mobileUser}>👤 {userData?.name}</div>
+                  <div onClick={() => { setMenuOpen(false); handleLogout(); }} style={styles.mobileLink}>🔓 Logout</div>
+                </>
               ) : (
                 renderMobileLink("/login", "🔐 Login Admin")
               )}
@@ -93,9 +81,11 @@ function Navbar() {
             {renderLink("/produk", "Produk")}
             {renderLink("/gabung", "Gabung Mitra")}
             {renderLink("/investor", "Investor")}
-            {user && role === 'admin' && renderLink("/dashboard", "Dashboard")}
             {user ? (
-              <div onClick={handleLogout} style={{ ...styles.link, cursor: 'pointer' }}>Logout</div>
+              <>
+                <span style={styles.username}>👤 {userData?.name}</span>
+                <div onClick={handleLogout} style={{ ...styles.link, cursor: 'pointer' }}>Logout</div>
+              </>
             ) : (
               renderLink("/login", "Login Admin")
             )}
@@ -138,6 +128,7 @@ const styles = {
   },
   desktopLinks: {
     display: 'flex',
+    alignItems: 'center',
     gap: '20px',
   },
   link: {
@@ -146,6 +137,11 @@ const styles = {
     fontWeight: '500',
     padding: '8px 14px',
     borderRadius: '6px',
+  },
+  username: {
+    fontWeight: 'bold',
+    marginRight: '12px',
+    color: '#f0f0f0',
   },
   hamburger: {
     display: 'flex',
@@ -180,6 +176,13 @@ const styles = {
     textDecoration: 'none',
     borderBottom: '1px solid #ccc',
     color: '#1b5e20',
+  },
+  mobileUser: {
+    fontSize: '1.1rem',
+    padding: '10px',
+    fontWeight: 'bold',
+    color: '#1b5e20',
+    borderBottom: '1px solid #ccc',
   },
   closeButton: {
     alignSelf: 'flex-end',
