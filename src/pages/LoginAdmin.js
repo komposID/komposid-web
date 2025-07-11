@@ -73,11 +73,12 @@ function LoginAdmin() {
 
         <div style={{ marginTop: '12px' }}>
           <button onClick={handleGoogleLogin} style={styles.googleBtn}>
-            <img
-              src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png"
-              alt="Google"
-              style={styles.icon}
-            />
+<img
+  src="/assets/google-icon.png"
+  alt="Google"
+  style={styles.icon}
+/>
+
             Login dengan Google
           </button>
         </div>
