@@ -1,3 +1,4 @@
+// src/components/Navbar.js
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext'; // ✅
@@ -7,7 +8,7 @@ function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  const { user, logout } = useAuth(); // ✅ akses login & logout
+  const { user, role, logout } = useAuth(); // ✅ akses login, role, logout
 
   useEffect(() => {
     const handleResize = () => {
@@ -19,7 +20,7 @@ function Navbar() {
   }, []);
 
   useEffect(() => {
-    setMenuOpen(false); // Tutup menu saat navigasi
+    setMenuOpen(false);
   }, [location]);
 
   const handleLogout = async () => {
@@ -27,13 +28,8 @@ function Navbar() {
     navigate('/login');
   };
 
-  const toggleMenu = () => {
-    setMenuOpen(!menuOpen);
-  };
-
-  const closeMenu = () => {
-    setMenuOpen(false);
-  };
+  const toggleMenu = () => setMenuOpen(!menuOpen);
+  const closeMenu = () => setMenuOpen(false);
 
   const renderLink = (to, label) => (
     <Link to={to} style={styles.link}>{label}</Link>
@@ -42,6 +38,11 @@ function Navbar() {
   const renderMobileLink = (to, label) => (
     <Link to={to} style={styles.mobileLink} onClick={closeMenu}>{label}</Link>
   );
+
+  // 🔍 Debug role
+  useEffect(() => {
+    console.log("🔐 Role login:", role);
+  }, [role]);
 
   return (
     <>
@@ -78,6 +79,7 @@ function Navbar() {
               {renderMobileLink("/produk", "🛒 Produk")}
               {renderMobileLink("/gabung", "🤝 Gabung Mitra")}
               {renderMobileLink("/investor", "💼 Investor")}
+              {user && role === 'admin' && renderMobileLink("/dashboard", "📊 Dashboard")}
               {user ? (
                 <div onClick={() => { closeMenu(); handleLogout(); }} style={styles.mobileLink}>🔓 Logout</div>
               ) : (
@@ -91,6 +93,7 @@ function Navbar() {
             {renderLink("/produk", "Produk")}
             {renderLink("/gabung", "Gabung Mitra")}
             {renderLink("/investor", "Investor")}
+            {user && role === 'admin' && renderLink("/dashboard", "Dashboard")}
             {user ? (
               <div onClick={handleLogout} style={{ ...styles.link, cursor: 'pointer' }}>Logout</div>
             ) : (

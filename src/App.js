@@ -1,3 +1,4 @@
+// src/App.js
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
@@ -8,8 +9,9 @@ import GabungMitra from './pages/GabungMitra';
 import LoginAdmin from './pages/LoginAdmin';
 import Investor from './pages/Investor';
 import Signup from './pages/Signup';
-
-import { AuthProvider } from './context/AuthContext'; // ✅ Import AuthProvider
+import Dashboard from './pages/Dashboard';
+import { AuthProvider } from './context/AuthContext';
+import PrivateRoute from './components/PrivateRoute';
 
 function App() {
   return (
@@ -23,6 +25,16 @@ function App() {
           <Route path="/login" element={<LoginAdmin />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/investor" element={<Investor />} />
+
+          {/* 🔒 Halaman Khusus Admin */}
+          <Route
+            path="/dashboard"
+            element={
+              <PrivateRoute requiredRole="admin">
+                <Dashboard />
+              </PrivateRoute>
+            }
+          />
         </Routes>
         <Footer />
       </Router>
