@@ -1,51 +1,69 @@
 import React, { useEffect, useState } from 'react';
-import { getFirestore, collection, getDocs, doc, updateDoc, deleteDoc } from 'firebase/firestore';
-import './Dashboard.css'; // ✅ Import CSS
-
-const db = getFirestore();
+import { db } from '../firebase';
+import {
+  collection,
+  getDocs,
+  updateDoc,
+  deleteDoc,
+  doc
+} from 'firebase/firestore';
+import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 function Dashboard() {
+  const { user, role } = useAuth();
   const [users, setUsers] = useState([]);
-  const [updatingId, setUpdatingId] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchUsers = async () => {
+    if (!user || role !== 'admin') {
+      navigate('/');
+    } else {
+      fetchUsers();
+    }
+  }, [user, role, navigate]);
+
+  const fetchUsers = async () => {
+    try {
       const snapshot = await getDocs(collection(db, 'users'));
-      const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      setUsers(data);
-    };
-    fetchUsers();
-  }, []);
+      const usersData = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setUsers(usersData);
+    } catch (error) {
+      console.error('Gagal mengambil data user:', error);
+    }
+  };
 
   const handleRoleChange = async (id, newRole) => {
-    setUpdatingId(id);
     try {
-      await updateDoc(doc(db, 'users', id), { role: newRole });
-      setUsers(users.map(user => (user.id === id ? { ...user, role: newRole } : user)));
+      await updateDoc(doc(db, 'users', id), {
+        role: newRole,
+      });
+      fetchUsers();
     } catch (error) {
-      alert('Gagal memperbarui peran: ' + error.message);
+      console.error('Gagal mengubah role:', error);
     }
-    setUpdatingId(null);
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm('Yakin ingin menghapus pengguna ini?')) {
-      try {
-        await deleteDoc(doc(db, 'users', id));
-        setUsers(users.filter(user => user.id !== id));
-      } catch (error) {
-        alert('Gagal menghapus: ' + error.message);
-      }
+    const confirm = window.confirm('Yakin ingin menghapus akun ini? Ini hanya menghapus dari Firestore, bukan dari Authentication.');
+    if (!confirm) return;
+
+    try {
+      await deleteDoc(doc(db, 'users', id));
+      fetchUsers();
+    } catch (error) {
+      console.error('Gagal menghapus user:', error);
     }
   };
 
   return (
-    <div className="dashboard-container">
-      <h2 className="dashboard-title">📋 Daftar Pengguna</h2>
-      <p className="dashboard-note">Kelola role dan data pengguna dari sistem KomposID</p>
-
-      <div className="table-wrapper">
-        <table className="user-table">
+    <div style={styles.container}>
+      <h2 style={styles.title}>👤 Daftar Pengguna KomposID</h2>
+      <div style={styles.tableWrapper}>
+        <table style={styles.table}>
           <thead>
             <tr>
               <th>Nama</th>
@@ -61,36 +79,56 @@ function Dashboard() {
                 <td>{u.email}</td>
                 <td>
                   <select
-                    value={u.role || 'pengguna'}
+                    value={u.role}
                     onChange={(e) => handleRoleChange(u.id, e.target.value)}
-                    disabled={updatingId === u.id}
                   >
-                    <option value="pengguna">Pengguna</option>
-                    <option value="mitra">Mitra</option>
-                    <option value="investor">Investor</option>
-                    <option value="admin">Admin</option>
+                    <option value="pengguna">pengguna</option>
+                    <option value="mitra">mitra</option>
+                    <option value="investor">investor</option>
+                    <option value="admin">admin</option>
                   </select>
                 </td>
                 <td>
-                  <button
-                    onClick={() => handleDelete(u.id)}
-                    className="delete-btn"
-                  >
+                  <button onClick={() => handleDelete(u.id)} style={styles.deleteBtn}>
                     Hapus
                   </button>
                 </td>
               </tr>
             ))}
-            {users.length === 0 && (
-              <tr>
-                <td colSpan="4" style={{ textAlign: 'center' }}>Tidak ada pengguna.</td>
-              </tr>
-            )}
           </tbody>
         </table>
       </div>
     </div>
   );
 }
+
+const styles = {
+  container: {
+    padding: '20px',
+    maxWidth: '100%',
+    overflowX: 'auto',
+  },
+  title: {
+    fontSize: '1.4rem',
+    marginBottom: '20px',
+    color: '#1b5e20',
+    fontWeight: 'bold',
+  },
+  tableWrapper: {
+    overflowX: 'auto',
+  },
+  table: {
+    width: '100%',
+    borderCollapse: 'collapse',
+  },
+  deleteBtn: {
+    backgroundColor: '#c62828',
+    color: '#fff',
+    border: 'none',
+    padding: '6px 10px',
+    borderRadius: '4px',
+    cursor: 'pointer',
+  },
+};
 
 export default Dashboard;

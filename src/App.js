@@ -30,7 +30,6 @@ function App() {
 
           {/* 🔒 Halaman Khusus Admin */}
           <Route path="/dashboard" element={<PrivateRoute requiredRole="admin"><Dashboard /></PrivateRoute>}/>
-          <Route path="/dashboard" element={<PrivateRoute requiredRole="admin"><Dashboard /></PrivateRoute>} />
           <Route path="/mitra-panel" element={<PrivateRoute requiredRole="mitra"><MitraPanel /></PrivateRoute>} />
           <Route path="/investor-panel" element={<PrivateRoute requiredRole="investor"><InvestorPanel /></PrivateRoute>} />
         </Routes>
