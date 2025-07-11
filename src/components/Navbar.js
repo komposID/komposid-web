@@ -1,3 +1,4 @@
+// src/components/Navbar.js
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -77,7 +78,7 @@ function Navbar() {
 
               <div style={styles.separator}></div>
 
-              <div style={styles.closeButton} onClick={() => setMenuOpen(false)}>✕</div>
+              {role === 'admin' && renderMobileLink("/dashboard", "🛠️ Dashboard")}
               {renderMobileLink("/", "🏠 Home")}
               {renderMobileLink("/produk", "🛒 Produk")}
               {renderMobileLink("/gabung", "🤝 Gabung Mitra")}
@@ -104,6 +105,7 @@ function Navbar() {
                 </div>
               </>
             )}
+            {role === 'admin' && renderLink("/dashboard", "🛠️ Dashboard")}
             {renderLink("/", "Home")}
             {renderLink("/produk", "Produk")}
             {renderLink("/gabung", "Gabung Mitra")}
