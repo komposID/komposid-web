@@ -101,18 +101,7 @@ function Signup() {
               alt="Google"
               style={styles.icon}
             />
-            Daftar / Login dengan Google
-          </button>
-          <button
-            onClick={handleFacebookSignup}
-            style={{ ...styles.socialBtn, backgroundColor: '#3b5998', color: '#fff' }}
-          >
-            <img
-              src="https://upload.wikimedia.org/wikipedia/commons/0/05/Facebook_Logo_%282019%29.png"
-              alt="FB"
-              style={styles.icon}
-            />
-            Daftar / Login dengan Facebook
+            Daftar dengan Google
           </button>
         </div>
 
