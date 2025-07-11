@@ -1,9 +1,12 @@
-// src/pages/LoginAdmin.js
 import React, { useState } from 'react';
 import './LoginAdmin.css';
 import { Link, useNavigate } from 'react-router-dom';
-import { auth, } from '../firebase';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../firebase';
+import {
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  GoogleAuthProvider,
+} from 'firebase/auth';
 
 function LoginAdmin() {
   const [identifier, setIdentifier] = useState('');
@@ -19,6 +22,17 @@ function LoginAdmin() {
       navigate('/');
     } catch (error) {
       setErrorMsg('Login gagal. Periksa kembali email & password Anda.');
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    const provider = new GoogleAuthProvider();
+    try {
+      await signInWithPopup(auth, provider);
+      alert('Berhasil login dengan Google.');
+      navigate('/');
+    } catch (error) {
+      alert('Login Google gagal: ' + error.message);
     }
   };
 
@@ -57,6 +71,17 @@ function LoginAdmin() {
           <button type="submit">Masuk Sekarang</button>
         </form>
 
+        <div style={{ marginTop: '12px' }}>
+          <button onClick={handleGoogleLogin} style={styles.googleBtn}>
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png"
+              alt="Google"
+              style={styles.icon}
+            />
+            Login dengan Google
+          </button>
+        </div>
+
         <div style={{ marginTop: '16px', fontSize: '0.9rem', textAlign: 'center' }}>
           Belum punya akun?{' '}
           <Link to="/signup" style={{ color: '#1b5e20', fontWeight: 'bold' }}>
@@ -71,5 +96,28 @@ function LoginAdmin() {
     </div>
   );
 }
+
+const styles = {
+  googleBtn: {
+    width: '100%',
+    padding: '10px 14px',
+    fontSize: '0.95rem',
+    fontWeight: 'bold',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: '6px',
+    border: 'none',
+    backgroundColor: '#fff',
+    color: '#333',
+    boxShadow: '0 2px 6px rgba(0,0,0,0.1)',
+    cursor: 'pointer',
+  },
+  icon: {
+    width: '18px',
+    height: '18px',
+    marginRight: '8px',
+  },
+};
 
 export default LoginAdmin;
