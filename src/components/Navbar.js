@@ -7,7 +7,7 @@ function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  const { user, userData, logout } = useAuth();
+  const { user, userData, role, logout } = useAuth();
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth <= 768);
@@ -67,12 +67,15 @@ function Navbar() {
                       alt="User"
                       style={styles.avatar}
                     />
-                    <div style={styles.mobileUser}>
-                      {userData?.name || "Pengguna"}
+                    <div>
+                      <div style={styles.mobileUser}>{userData?.name || "Pengguna"}</div>
+                      <div style={styles.roleText}>{role || "pengguna"}</div>
                     </div>
                   </>
                 )}
               </div>
+
+              <div style={styles.separator}></div>
 
               <div style={styles.closeButton} onClick={() => setMenuOpen(false)}>✕</div>
               {renderMobileLink("/", "🏠 Home")}
@@ -95,7 +98,10 @@ function Navbar() {
                   alt="User"
                   style={styles.avatarDesktop}
                 />
-                <span style={styles.username}>{userData?.name}</span>
+                <div>
+                  <span style={styles.username}>{userData?.name}</span><br />
+                  <span style={styles.roleTextDesktop}>{role}</span>
+                </div>
               </>
             )}
             {renderLink("/", "Home")}
@@ -159,6 +165,11 @@ const styles = {
   username: {
     fontWeight: 'bold',
     color: '#f0f0f0',
+    fontSize: '0.95rem',
+  },
+  roleTextDesktop: {
+    fontSize: '0.75rem',
+    color: '#d9f2d9',
   },
   avatarDesktop: {
     width: '34px',
@@ -197,9 +208,7 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     gap: '12px',
-    borderBottom: '1px solid #ccc',
-    paddingBottom: '12px',
-    marginBottom: '12px',
+    paddingBottom: '8px',
   },
   avatar: {
     width: '44px',
@@ -211,6 +220,15 @@ const styles = {
     fontSize: '1rem',
     fontWeight: 'bold',
     color: '#1b5e20',
+  },
+  roleText: {
+    fontSize: '0.85rem',
+    color: '#555',
+    marginTop: '2px',
+  },
+  separator: {
+    borderBottom: '1px solid #ccc',
+    margin: '12px 0',
   },
   mobileLink: {
     fontSize: '1.1rem',
