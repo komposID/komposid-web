@@ -1,5 +1,5 @@
 // src/context/AuthContext.js
-import { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import { auth, db } from '../firebase';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
@@ -8,25 +8,25 @@ export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [userData, setUserData] = useState(null); // data dari Firestore
   const [role, setRole] = useState(null);
+  const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const fetchUserData = async (uid) => {
+  const fetchUserDetails = async (uid) => {
     try {
-      const userDoc = await getDoc(doc(db, "users", uid));
+      const userDoc = await getDoc(doc(db, 'users', uid));
       if (userDoc.exists()) {
         const data = userDoc.data();
-        setUserData(data);
         setRole(data.role || 'pengguna');
+        setUserData(data);
       } else {
-        setUserData(null);
         setRole('pengguna');
+        setUserData(null);
       }
-    } catch (err) {
-      console.error("Gagal ambil data user:", err);
-      setUserData(null);
+    } catch (error) {
+      console.error('Gagal mengambil data user:', error);
       setRole('pengguna');
+      setUserData(null);
     }
   };
 
@@ -34,11 +34,11 @@ export const AuthProvider = ({ children }) => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
         setUser(firebaseUser);
-        await fetchUserData(firebaseUser.uid);
+        await fetchUserDetails(firebaseUser.uid);
       } else {
         setUser(null);
-        setUserData(null);
         setRole(null);
+        setUserData(null);
       }
       setLoading(false);
     });
@@ -49,7 +49,7 @@ export const AuthProvider = ({ children }) => {
   const logout = () => signOut(auth);
 
   return (
-    <AuthContext.Provider value={{ user, userData, role, logout, loading }}>
+    <AuthContext.Provider value={{ user, role, userData, logout, loading }}>
       {children}
     </AuthContext.Provider>
   );
