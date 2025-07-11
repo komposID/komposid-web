@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './Signup.css';
 import { useNavigate } from 'react-router-dom';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, FacebookAuthProvider } from 'firebase/auth';
 import { auth } from '../firebase';
 
 function Signup() {
@@ -18,6 +18,28 @@ function Signup() {
       navigate('/login');
     } catch (error) {
       alert('Gagal daftar: ' + error.message);
+    }
+  };
+
+  const handleGoogleSignup = async () => {
+    const provider = new GoogleAuthProvider();
+    try {
+      await signInWithPopup(auth, provider);
+      alert('Berhasil daftar/login dengan Google.');
+      navigate('/login');
+    } catch (error) {
+      alert('Gagal Google Signup: ' + error.message);
+    }
+  };
+
+  const handleFacebookSignup = async () => {
+    const provider = new FacebookAuthProvider();
+    try {
+      await signInWithPopup(auth, provider);
+      alert('Berhasil daftar/login dengan Facebook.');
+      navigate('/login');
+    } catch (error) {
+      alert('Gagal Facebook Signup: ' + error.message);
     }
   };
 
@@ -43,7 +65,7 @@ function Signup() {
           </div>
 
           <div className="form-group">
-            <label htmlFor="identifier">📧 Email / No HP</label>
+            <label htmlFor="identifier">📧 Email</label>
             <input
               type="email"
               id="identifier"
@@ -69,6 +91,17 @@ function Signup() {
           <button type="submit">Daftar Sekarang</button>
         </form>
 
+        <div style={{ margin: '16px 0' }}>
+          <button onClick={handleGoogleSignup} style={styles.socialBtn}>
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png" alt="Google" style={styles.icon} />
+            Daftar / Login dengan Google
+          </button>
+          <button onClick={handleFacebookSignup} style={{ ...styles.socialBtn, backgroundColor: '#3b5998' }}>
+            <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="FB" style={styles.icon} />
+            Daftar / Login dengan Facebook
+          </button>
+        </div>
+
         <p className="signup-footer-note">
           Sudah punya akun?{' '}
           <a href="/login" className="signup-link">Login di sini</a>
@@ -81,5 +114,29 @@ function Signup() {
     </div>
   );
 }
+
+const styles = {
+  socialBtn: {
+    width: '100%',
+    padding: '10px 14px',
+    marginBottom: '12px',
+    fontSize: '0.95rem',
+    fontWeight: 'bold',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: '6px',
+    border: 'none',
+    backgroundColor: '#fff',
+    color: '#333',
+    boxShadow: '0 2px 6px rgba(0,0,0,0.1)',
+    cursor: 'pointer',
+  },
+  icon: {
+    width: '18px',
+    height: '18px',
+    marginRight: '8px',
+  },
+};
 
 export default Signup;
