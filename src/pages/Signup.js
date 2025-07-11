@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import './Signup.css';
 import { useNavigate } from 'react-router-dom';
-import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
-import { auth } from '../firebase/config';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../firebase';
 
 function Signup() {
   const [name, setName] = useState('');
@@ -12,14 +12,8 @@ function Signup() {
 
   const handleSignup = async (e) => {
     e.preventDefault();
-
     try {
-      // Daftar akun ke Firebase pakai email/HP
-      const userCredential = await createUserWithEmailAndPassword(auth, identifier, password);
-
-      // Update displayName
-      await updateProfile(userCredential.user, { displayName: name });
-
+      await createUserWithEmailAndPassword(auth, identifier, password);
       alert('Pendaftaran berhasil! Silakan login.');
       navigate('/login');
     } catch (error) {
@@ -51,9 +45,9 @@ function Signup() {
           <div className="form-group">
             <label htmlFor="identifier">📧 Email / No HP</label>
             <input
-              type="text"
+              type="email"
               id="identifier"
-              placeholder="Contoh: email@domain.com atau 08xxxx"
+              placeholder="Contoh: email@domain.com"
               value={identifier}
               onChange={(e) => setIdentifier(e.target.value)}
               required
@@ -79,7 +73,6 @@ function Signup() {
           Sudah punya akun?{' '}
           <a href="/login" className="signup-link">Login di sini</a>
         </p>
-
         <div className="signup-info-box">
           <p><strong>🔒 Keamanan:</strong> Data Anda hanya digunakan untuk keperluan sistem internal KomposID.</p>
           <p><strong>📌 Catatan:</strong> Tim kami akan memverifikasi pendaftaran sebelum akses penuh diberikan.</p>
