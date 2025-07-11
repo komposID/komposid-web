@@ -9,6 +9,7 @@ import {
 } from 'firebase/firestore';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import './Dashboard.css';
 
 function Dashboard() {
   const { user, role } = useAuth();

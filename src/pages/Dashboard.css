@@ -5,27 +5,26 @@
 }
 
 .dashboard-title {
-  font-size: 1.5rem;
-  margin-bottom: 10px;
+  font-size: 1.4rem;
   color: #1b5e20;
+  margin-bottom: 4px;
+  font-weight: bold;
 }
 
 .dashboard-note {
   font-size: 0.9rem;
-  margin-bottom: 16px;
   color: #555;
+  margin-bottom: 20px;
 }
 
 .table-wrapper {
-  width: 100%;
   overflow-x: auto;
 }
 
 .user-table {
   width: 100%;
-  min-width: 600px;
   border-collapse: collapse;
-  background-color: #fff;
+  border: 1px solid #ccc;
 }
 
 .user-table th,
@@ -33,17 +32,22 @@
   padding: 10px;
   text-align: left;
   border: 1px solid #ccc;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
 }
 
 .user-table th {
   background-color: #e8f5e9;
   color: #1b5e20;
+  font-weight: 600;
+}
+
+.user-table tr:nth-child(even) {
+  background-color: #f9f9f9;
 }
 
 .delete-btn {
-  background-color: #d32f2f;
-  color: #fff;
+  background-color: #c62828;
+  color: white;
   border: none;
   padding: 6px 12px;
   border-radius: 4px;
@@ -53,15 +57,4 @@
 
 .delete-btn:hover {
   background-color: #b71c1c;
-}
-
-@media (max-width: 768px) {
-  .user-table {
-    font-size: 0.8rem;
-    min-width: unset;
-  }
-
-  .dashboard-container {
-    padding: 14px;
-  }
 }
