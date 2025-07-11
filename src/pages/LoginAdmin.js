@@ -1,7 +1,8 @@
+// src/pages/LoginAdmin.js
 import React, { useState } from 'react';
 import './LoginAdmin.css';
 import { Link, useNavigate } from 'react-router-dom';
-import { auth } from '../firebase';
+import { auth, } from '../firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 
 function LoginAdmin() {
@@ -13,13 +14,11 @@ function LoginAdmin() {
   const handleLogin = async (e) => {
     e.preventDefault();
     setErrorMsg('');
-
     try {
       await signInWithEmailAndPassword(auth, identifier, password);
-      navigate('/'); // Arahkan ke home setelah login
+      navigate('/');
     } catch (error) {
       setErrorMsg('Login gagal. Periksa kembali email & password Anda.');
-      console.error(error.message);
     }
   };
 
