@@ -1,8 +1,15 @@
+// src/pages/Signup.js
 import React, { useState } from 'react';
 import './Signup.css';
 import { useNavigate } from 'react-router-dom';
-import { createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
-import { auth } from '../firebase';
+import {
+  createUserWithEmailAndPassword,
+  signInWithPopup,
+  GoogleAuthProvider,
+  FacebookAuthProvider
+} from 'firebase/auth';
+import { auth, db } from '../firebase';
+import { doc, setDoc } from 'firebase/firestore';
 
 function Signup() {
   const [name, setName] = useState('');
@@ -10,10 +17,21 @@ function Signup() {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
+  const saveUserToFirestore = async (user, namaLengkap, role = "pengguna") => {
+    await setDoc(doc(db, "users", user.uid), {
+      uid: user.uid,
+      name: namaLengkap,
+      email: user.email,
+      role: role,
+      createdAt: new Date()
+    });
+  };
+
   const handleSignup = async (e) => {
     e.preventDefault();
     try {
-      await createUserWithEmailAndPassword(auth, identifier, password);
+      const result = await createUserWithEmailAndPassword(auth, identifier, password);
+      await saveUserToFirestore(result.user, name);
       alert('Pendaftaran berhasil! Silakan login.');
       navigate('/login');
     } catch (error) {
@@ -24,7 +42,8 @@ function Signup() {
   const handleGoogleSignup = async () => {
     const provider = new GoogleAuthProvider();
     try {
-      await signInWithPopup(auth, provider);
+      const result = await signInWithPopup(auth, provider);
+      await saveUserToFirestore(result.user, result.user.displayName);
       alert('Berhasil daftar/login dengan Google.');
       navigate('/');
     } catch (error) {
@@ -37,7 +56,7 @@ function Signup() {
       <div className="signup-card">
         <h2 className="signup-title">📝 Daftar Akun</h2>
         <p className="signup-subtitle">
-          Formulir ini digunakan untuk semua jenis pendaftaran akun. Harap isi data dengan benar sesuai kebutuhan login Anda.
+          Isi formulir untuk membuat akun baru di KomposID.
         </p>
 
         <form className="signup-form" onSubmit={handleSignup}>
@@ -52,19 +71,17 @@ function Signup() {
               required
             />
           </div>
-
           <div className="form-group">
             <label htmlFor="identifier">📧 Email</label>
             <input
               type="email"
               id="identifier"
-              placeholder="Contoh: email@domain.com"
+              placeholder="email@domain.com"
               value={identifier}
               onChange={(e) => setIdentifier(e.target.value)}
               required
             />
           </div>
-
           <div className="form-group">
             <label htmlFor="password">🔑 Buat Password</label>
             <input
@@ -83,7 +100,7 @@ function Signup() {
         <div style={{ margin: '16px 0' }}>
           <button onClick={handleGoogleSignup} style={styles.socialBtn}>
             <img
-              src="https://developers.google.com/identity/images/g-logo.png"
+              src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png"
               alt="Google"
               style={styles.icon}
             />
@@ -96,8 +113,7 @@ function Signup() {
           <a href="/login" className="signup-link">Login di sini</a>
         </p>
         <div className="signup-info-box">
-          <p><strong>🔒 Keamanan:</strong> Data Anda hanya digunakan untuk keperluan sistem internal KomposID.</p>
-          <p><strong>📌 Catatan:</strong> Tim kami akan memverifikasi pendaftaran sebelum akses penuh diberikan.</p>
+          <p><strong>🔒 Keamanan:</strong> Data Anda hanya digunakan untuk keperluan internal KomposID.</p>
         </div>
       </div>
     </div>
