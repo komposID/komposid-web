@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import './Signup.css';
 import { useNavigate } from 'react-router-dom';
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { auth } from '../firebase/config';
 
 function Signup() {
   const [name, setName] = useState('');
@@ -8,11 +10,21 @@ function Signup() {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const handleSignup = (e) => {
+  const handleSignup = async (e) => {
     e.preventDefault();
-    console.log('Daftar:', name, identifier, password);
-    alert('Pendaftaran berhasil! Silakan login.');
-    navigate('/login');
+
+    try {
+      // Daftar akun ke Firebase pakai email/HP
+      const userCredential = await createUserWithEmailAndPassword(auth, identifier, password);
+
+      // Update displayName
+      await updateProfile(userCredential.user, { displayName: name });
+
+      alert('Pendaftaran berhasil! Silakan login.');
+      navigate('/login');
+    } catch (error) {
+      alert('Gagal daftar: ' + error.message);
+    }
   };
 
   return (
