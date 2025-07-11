@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import './LoginAdmin.css';
 import { Link, useNavigate } from 'react-router-dom';
-import { auth, signInWithGoogleAndSync } from '../firebase';
+import { auth, db, signInWithGoogleAndSync } from '../firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
+import { doc, getDoc } from 'firebase/firestore';
 
 function LoginAdmin() {
   const [identifier, setIdentifier] = useState('');
@@ -10,12 +11,37 @@ function LoginAdmin() {
   const [errorMsg, setErrorMsg] = useState('');
   const navigate = useNavigate();
 
+  const redirectBasedOnRole = async (uid) => {
+    const userRef = doc(db, 'users', uid);
+    const userSnap = await getDoc(userRef);
+
+    if (userSnap.exists()) {
+      const role = userSnap.data().role || 'pengguna';
+
+      switch (role) {
+        case 'admin':
+          navigate('/admin/dashboard');
+          break;
+        case 'mitra':
+          navigate('/mitra');
+          break;
+        case 'investor':
+          navigate('/investor');
+          break;
+        default:
+          navigate('/');
+      }
+    } else {
+      navigate('/');
+    }
+  };
+
   const handleLogin = async (e) => {
     e.preventDefault();
     setErrorMsg('');
     try {
-      await signInWithEmailAndPassword(auth, identifier, password);
-      navigate('/');
+      const userCred = await signInWithEmailAndPassword(auth, identifier, password);
+      await redirectBasedOnRole(userCred.user.uid);
     } catch (error) {
       setErrorMsg('Login gagal. Periksa kembali email & password Anda.');
     }
@@ -23,8 +49,8 @@ function LoginAdmin() {
 
   const handleGoogleLogin = async () => {
     try {
-      await signInWithGoogleAndSync(); // Sinkron ke Firestore
-      navigate('/');
+      const user = await signInWithGoogleAndSync();
+      await redirectBasedOnRole(user.uid);
     } catch (error) {
       alert('Login Google gagal: ' + error.message);
     }
