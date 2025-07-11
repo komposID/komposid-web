@@ -1,91 +1,94 @@
-// src/pages/Dashboard.js
 import React, { useEffect, useState } from 'react';
-import { getDocs, collection, updateDoc, deleteDoc, doc } from 'firebase/firestore';
-import { deleteUser } from 'firebase/auth';
-import { db, auth } from '../firebase';
-import { useAuth } from '../context/AuthContext';
+import { getFirestore, collection, getDocs, doc, updateDoc, deleteDoc } from 'firebase/firestore';
+import './Dashboard.css'; // ✅ Import CSS
+
+const db = getFirestore();
 
 function Dashboard() {
-  const { user } = useAuth();
   const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  // Ambil semua user dari Firestore
-  const fetchUsers = async () => {
-    const querySnapshot = await getDocs(collection(db, 'users'));
-    const userList = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-    setUsers(userList);
-    setLoading(false);
-  };
+  const [updatingId, setUpdatingId] = useState(null);
 
   useEffect(() => {
+    const fetchUsers = async () => {
+      const snapshot = await getDocs(collection(db, 'users'));
+      const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      setUsers(data);
+    };
     fetchUsers();
   }, []);
 
-  // Update role user
-  const handleRoleChange = async (uid, newRole) => {
-    await updateDoc(doc(db, 'users', uid), { role: newRole });
-    fetchUsers();
-  };
-
-  // Hapus akun dari Firestore + Firebase Auth
-  const handleDelete = async (uid) => {
-    if (uid === user.uid) {
-      alert("Kamu tidak bisa hapus akun sendiri.");
-      return;
-    }
-
-    if (!window.confirm("Yakin ingin menghapus akun ini?")) return;
-
+  const handleRoleChange = async (id, newRole) => {
+    setUpdatingId(id);
     try {
-      // Hapus dari Firestore
-      await deleteDoc(doc(db, 'users', uid));
-
-      // Hapus dari Authentication
-      const targetUser = await auth.getUser(uid); // hanya bisa di Firebase Admin SDK
-      await deleteUser(targetUser); // ini gagal jika bukan pakai Admin SDK
-
-      alert("Akun berhasil dihapus.");
-      fetchUsers();
+      await updateDoc(doc(db, 'users', id), { role: newRole });
+      setUsers(users.map(user => (user.id === id ? { ...user, role: newRole } : user)));
     } catch (error) {
-      alert("Gagal hapus akun: " + error.message);
+      alert('Gagal memperbarui peran: ' + error.message);
     }
+    setUpdatingId(null);
   };
 
-  if (loading) return <div>Loading pengguna...</div>;
+  const handleDelete = async (id) => {
+    if (window.confirm('Yakin ingin menghapus pengguna ini?')) {
+      try {
+        await deleteDoc(doc(db, 'users', id));
+        setUsers(users.filter(user => user.id !== id));
+      } catch (error) {
+        alert('Gagal menghapus: ' + error.message);
+      }
+    }
+  };
 
   return (
-    <div style={{ padding: '20px' }}>
-      <h2>📋 Daftar Pengguna</h2>
-      <table border="1" cellPadding="10" style={{ width: '100%', marginTop: '20px' }}>
-        <thead>
-          <tr>
-            <th>Nama</th>
-            <th>Email</th>
-            <th>Role</th>
-            <th>Aksi</th>
-          </tr>
-        </thead>
-        <tbody>
-          {users.map((u) => (
-            <tr key={u.id}>
-              <td>{u.name}</td>
-              <td>{u.email}</td>
-              <td>
-                <select value={u.role} onChange={(e) => handleRoleChange(u.id, e.target.value)}>
-                  <option value="pengguna">pengguna</option>
-                  <option value="mitra">mitra</option>
-                  <option value="investor">investor</option>
-                  <option value="admin">admin</option>
-                </select>
-              </td>
-              <td>
-                <button onClick={() => handleDelete(u.id)} style={{ color: 'red' }}>🗑 Hapus</button>
-              </td>
+    <div className="dashboard-container">
+      <h2 className="dashboard-title">📋 Daftar Pengguna</h2>
+      <p className="dashboard-note">Kelola role dan data pengguna dari sistem KomposID</p>
+
+      <div className="table-wrapper">
+        <table className="user-table">
+          <thead>
+            <tr>
+              <th>Nama</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Aksi</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {users.map((u) => (
+              <tr key={u.id}>
+                <td>{u.name || '-'}</td>
+                <td>{u.email}</td>
+                <td>
+                  <select
+                    value={u.role || 'pengguna'}
+                    onChange={(e) => handleRoleChange(u.id, e.target.value)}
+                    disabled={updatingId === u.id}
+                  >
+                    <option value="pengguna">Pengguna</option>
+                    <option value="mitra">Mitra</option>
+                    <option value="investor">Investor</option>
+                    <option value="admin">Admin</option>
+                  </select>
+                </td>
+                <td>
+                  <button
+                    onClick={() => handleDelete(u.id)}
+                    className="delete-btn"
+                  >
+                    Hapus
+                  </button>
+                </td>
+              </tr>
+            ))}
+            {users.length === 0 && (
+              <tr>
+                <td colSpan="4" style={{ textAlign: 'center' }}>Tidak ada pengguna.</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
