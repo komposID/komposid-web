@@ -6,11 +6,10 @@ import { useAuth } from '../context/AuthContext';
 function PrivateRoute({ children, requiredRole }) {
   const { user, role, loading } = useAuth();
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <div>Loading...</div>; // ⏳ Tunggu data user & role terbaca
 
   if (!user) return <Navigate to="/login" replace />;
 
-  // Jika role tidak sesuai, redirect ke home
   if (requiredRole && role !== requiredRole) {
     return <Navigate to="/" replace />;
   }
