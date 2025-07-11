@@ -12,6 +12,8 @@ import Signup from './pages/Signup';
 import Dashboard from './pages/Dashboard';
 import { AuthProvider } from './context/AuthContext';
 import PrivateRoute from './components/PrivateRoute';
+import MitraPanel from './pages/MitraPanel';
+import InvestorPanel from './pages/InvestorPanel';
 
 function App() {
   return (
@@ -27,14 +29,10 @@ function App() {
           <Route path="/investor" element={<Investor />} />
 
           {/* 🔒 Halaman Khusus Admin */}
-          <Route
-            path="/dashboard"
-            element={
-              <PrivateRoute requiredRole="admin">
-                <Dashboard />
-              </PrivateRoute>
-            }
-          />
+          <Route path="/dashboard" element={<PrivateRoute requiredRole="admin"><Dashboard /></PrivateRoute>}/>
+          <Route path="/dashboard" element={<PrivateRoute requiredRole="admin"><Dashboard /></PrivateRoute>} />
+          <Route path="/mitra-panel" element={<PrivateRoute requiredRole="mitra"><MitraPanel /></PrivateRoute>} />
+          <Route path="/investor-panel" element={<PrivateRoute requiredRole="investor"><InvestorPanel /></PrivateRoute>} />
         </Routes>
         <Footer />
       </Router>
