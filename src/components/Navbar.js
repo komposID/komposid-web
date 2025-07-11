@@ -1,4 +1,3 @@
-// src/components/Navbar.js
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -8,7 +7,7 @@ function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  const { user, userData, logout } = useAuth(); // Tambahan userData ✅
+  const { user, userData, logout } = useAuth();
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth <= 768);
@@ -60,16 +59,28 @@ function Navbar() {
               ...styles.mobileMenu,
               right: menuOpen ? '0' : '-100%',
             }}>
+              <div style={styles.mobileHeader}>
+                {user && (
+                  <>
+                    <img
+                      src={user.photoURL || "https://ui-avatars.com/api/?name=" + (userData?.name || "User")}
+                      alt="User"
+                      style={styles.avatar}
+                    />
+                    <div style={styles.mobileUser}>
+                      {userData?.name || "Pengguna"}
+                    </div>
+                  </>
+                )}
+              </div>
+
               <div style={styles.closeButton} onClick={() => setMenuOpen(false)}>✕</div>
               {renderMobileLink("/", "🏠 Home")}
               {renderMobileLink("/produk", "🛒 Produk")}
               {renderMobileLink("/gabung", "🤝 Gabung Mitra")}
               {renderMobileLink("/investor", "💼 Investor")}
               {user ? (
-                <>
-                  <div style={styles.mobileUser}>👤 {userData?.name}</div>
-                  <div onClick={() => { setMenuOpen(false); handleLogout(); }} style={styles.mobileLink}>🔓 Logout</div>
-                </>
+                <div onClick={() => { setMenuOpen(false); handleLogout(); }} style={styles.mobileLink}>🔓 Logout</div>
               ) : (
                 renderMobileLink("/login", "🔐 Login Admin")
               )}
@@ -77,15 +88,22 @@ function Navbar() {
           </>
         ) : (
           <div style={styles.desktopLinks}>
+            {user && (
+              <>
+                <img
+                  src={user.photoURL || "https://ui-avatars.com/api/?name=" + (userData?.name || "User")}
+                  alt="User"
+                  style={styles.avatarDesktop}
+                />
+                <span style={styles.username}>{userData?.name}</span>
+              </>
+            )}
             {renderLink("/", "Home")}
             {renderLink("/produk", "Produk")}
             {renderLink("/gabung", "Gabung Mitra")}
             {renderLink("/investor", "Investor")}
             {user ? (
-              <>
-                <span style={styles.username}>👤 {userData?.name}</span>
-                <div onClick={handleLogout} style={{ ...styles.link, cursor: 'pointer' }}>Logout</div>
-              </>
+              <div onClick={handleLogout} style={{ ...styles.link, cursor: 'pointer' }}>Logout</div>
             ) : (
               renderLink("/login", "Login Admin")
             )}
@@ -129,7 +147,7 @@ const styles = {
   desktopLinks: {
     display: 'flex',
     alignItems: 'center',
-    gap: '20px',
+    gap: '16px',
   },
   link: {
     color: '#fff',
@@ -140,8 +158,13 @@ const styles = {
   },
   username: {
     fontWeight: 'bold',
-    marginRight: '12px',
     color: '#f0f0f0',
+  },
+  avatarDesktop: {
+    width: '34px',
+    height: '34px',
+    borderRadius: '50%',
+    objectFit: 'cover',
   },
   hamburger: {
     display: 'flex',
@@ -164,31 +187,42 @@ const styles = {
     color: '#333',
     display: 'flex',
     flexDirection: 'column',
-    padding: '30px 20px',
-    gap: '20px',
+    padding: '20px',
+    gap: '14px',
     zIndex: 2001,
     boxShadow: '-3px 0 8px rgba(0,0,0,0.2)',
     transition: 'right 0.3s ease-in-out',
   },
+  mobileHeader: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '12px',
+    borderBottom: '1px solid #ccc',
+    paddingBottom: '12px',
+    marginBottom: '12px',
+  },
+  avatar: {
+    width: '44px',
+    height: '44px',
+    borderRadius: '50%',
+    objectFit: 'cover',
+  },
+  mobileUser: {
+    fontSize: '1rem',
+    fontWeight: 'bold',
+    color: '#1b5e20',
+  },
   mobileLink: {
-    fontSize: '1.2rem',
-    padding: '12px 10px',
+    fontSize: '1.1rem',
+    padding: '10px',
     textDecoration: 'none',
     borderBottom: '1px solid #ccc',
     color: '#1b5e20',
-  },
-  mobileUser: {
-    fontSize: '1.1rem',
-    padding: '10px',
-    fontWeight: 'bold',
-    color: '#1b5e20',
-    borderBottom: '1px solid #ccc',
   },
   closeButton: {
     alignSelf: 'flex-end',
     fontSize: '1.5rem',
     cursor: 'pointer',
-    marginBottom: '20px',
     color: '#1b5e20',
   },
   overlay: {
