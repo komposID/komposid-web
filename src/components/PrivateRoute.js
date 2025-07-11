@@ -1,20 +1,23 @@
-// src/components/PrivateRoute.js
-import React from 'react';
+import React, { useContext } from 'react';
 import { Navigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { AuthContext } from '../context/AuthContext';
 
-function PrivateRoute({ children, requiredRole }) {
-  const { user, role, loading } = useAuth();
+const PrivateRoute = ({ children, requiredRole }) => {
+  const { user, loading } = useContext(AuthContext);
 
-  if (loading) return <div>Loading...</div>; // ⏳ Tunggu data user & role terbaca
+  if (loading) {
+    return <div style={{ textAlign: 'center', marginTop: '40px' }}>🔄 Memuat...</div>;
+  }
 
-  if (!user) return <Navigate to="/login" replace />;
+  if (!user) {
+    return <Navigate to="/login" />;
+  }
 
-  if (requiredRole && role !== requiredRole) {
-    return <Navigate to="/" replace />;
+  if (requiredRole && user.role !== requiredRole) {
+    return <Navigate to="/" />; // atau redirect ke halaman khusus jika ingin
   }
 
   return children;
-}
+};
 
 export default PrivateRoute;
