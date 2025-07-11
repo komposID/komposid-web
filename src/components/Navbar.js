@@ -8,7 +8,7 @@ function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  const { user, userData, role, logout } = useAuth();
+  const { user, role, logout } = useAuth();
 
   const isActive = (path) => location.pathname === path;
 
@@ -32,6 +32,8 @@ function Navbar() {
       style={{
         ...styles.link,
         backgroundColor: isActive(to) ? '#2e7d32' : 'transparent',
+        color: isActive(to) ? '#fff' : '#e0e0e0',
+        fontWeight: isActive(to) ? 'bold' : '500',
       }}
     >
       {label}
@@ -44,6 +46,7 @@ function Navbar() {
       onClick={() => setMenuOpen(false)}
       style={{
         ...styles.mobileLink,
+        backgroundColor: isActive(to) ? '#c8e6c9' : 'transparent',
         fontWeight: isActive(to) ? 'bold' : 'normal',
         color: isActive(to) ? '#0d4d00' : '#1b5e20',
       }}
@@ -78,12 +81,12 @@ function Navbar() {
               {user && (
                 <>
                   <img
-                    src={user.photoURL || `https://ui-avatars.com/api/?name=${userData?.name || 'User'}`}
+                    src={user.photoURL || `https://ui-avatars.com/api/?name=${user.displayName || 'User'}`}
                     alt="User"
                     style={styles.avatar}
                   />
                   <div>
-                    <div style={styles.mobileUser}>{userData?.name || "Pengguna"}</div>
+                    <div style={styles.mobileUser}>{user.displayName || 'Pengguna'}</div>
                     <div style={styles.roleText}>{role || "pengguna"}</div>
                   </div>
                 </>
@@ -107,12 +110,12 @@ function Navbar() {
           {user && (
             <>
               <img
-                src={user.photoURL || `https://ui-avatars.com/api/?name=${userData?.name || 'User'}`}
+                src={user.photoURL || `https://ui-avatars.com/api/?name=${user.displayName || 'User'}`}
                 alt="User"
                 style={styles.avatarDesktop}
               />
               <div>
-                <span style={styles.username}>{userData?.name || 'Pengguna'}</span><br />
+                <span style={styles.username}>{user.displayName || 'Pengguna'}</span><br />
                 <span style={styles.roleTextDesktop}>{role || 'pengguna'}</span>
               </div>
             </>
@@ -132,6 +135,7 @@ function Navbar() {
     </nav>
   );
 }
+
 const styles = {
   navbar: {
     backgroundColor: '#1b5e20',
@@ -173,6 +177,7 @@ const styles = {
     fontWeight: '500',
     padding: '8px 14px',
     borderRadius: '6px',
+    transition: 'all 0.2s ease-in-out',
   },
   username: {
     fontWeight: 'bold',
@@ -247,12 +252,6 @@ const styles = {
     padding: '10px',
     textDecoration: 'none',
     borderBottom: '1px solid #ccc',
-    color: '#1b5e20',
-  },
-  closeButton: {
-    alignSelf: 'flex-end',
-    fontSize: '1.5rem',
-    cursor: 'pointer',
     color: '#1b5e20',
   },
   overlay: {
