@@ -83,7 +83,7 @@ function Signup() {
         <div style={{ margin: '16px 0' }}>
           <button onClick={handleGoogleSignup} style={styles.socialBtn}>
             <img
-              src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png"
+              src="https://developers.google.com/identity/images/g-logo.png"
               alt="Google"
               style={styles.icon}
             />
