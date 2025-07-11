@@ -10,6 +10,8 @@ function Navbar() {
   const navigate = useNavigate();
   const { user, userData, role, logout } = useAuth();
 
+  const isActive = (path) => location.pathname === path;
+
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth <= 768);
     handleResize();
@@ -25,235 +27,108 @@ function Navbar() {
   };
 
   const renderLink = (to, label) => (
-    <Link to={to} style={styles.link}>{label}</Link>
+    <Link
+      to={to}
+      style={{
+        ...styles.link,
+        backgroundColor: isActive(to) ? '#2e7d32' : 'transparent',
+      }}
+    >
+      {label}
+    </Link>
   );
 
   const renderMobileLink = (to, label) => (
-    <Link to={to} style={styles.mobileLink} onClick={() => setMenuOpen(false)}>{label}</Link>
+    <Link
+      to={to}
+      onClick={() => setMenuOpen(false)}
+      style={{
+        ...styles.mobileLink,
+        fontWeight: isActive(to) ? 'bold' : 'normal',
+        color: isActive(to) ? '#0d4d00' : '#1b5e20',
+      }}
+    >
+      {label}
+    </Link>
   );
 
   return (
-    <>
-      <nav style={styles.navbar}>
-        <div style={styles.left}>
-          <Link to="/" style={styles.brandWrapper}>
-            <img
-              src="https://res.cloudinary.com/komposid/image/upload/v1752160491/BackgroundEraser_20250519_230147344_hkqxla.png"
-              alt="KomposID"
-              style={styles.logo}
-            />
-            <span style={styles.brand}>KomposID</span>
-          </Link>
-        </div>
+    <nav style={styles.navbar}>
+      <div style={styles.left}>
+        <Link to="/" style={styles.brandWrapper}>
+          <img
+            src="https://res.cloudinary.com/komposid/image/upload/v1752160491/BackgroundEraser_20250519_230147344_hkqxla.png"
+            alt="KomposID"
+            style={styles.logo}
+          />
+          <span style={styles.brand}>KomposID</span>
+        </Link>
+      </div>
 
-        {isMobile ? (
-          <>
-            <div style={styles.hamburger} onClick={() => setMenuOpen(!menuOpen)}>
-              <div style={styles.bar}></div>
-              <div style={styles.bar}></div>
-              <div style={styles.bar}></div>
-            </div>
-
-            {menuOpen && <div style={styles.overlay} onClick={() => setMenuOpen(false)}></div>}
-
-            <div style={{
-              ...styles.mobileMenu,
-              right: menuOpen ? '0' : '-100%',
-            }}>
-              <div style={styles.mobileHeader}>
-                {user && (
-                  <>
-                    <img
-                      src={user.photoURL || "https://ui-avatars.com/api/?name=" + (userData?.name || "User")}
-                      alt="User"
-                      style={styles.avatar}
-                    />
-                    <div>
-                      <div style={styles.mobileUser}>{userData?.name || "Pengguna"}</div>
-                      <div style={styles.roleText}>{role || "pengguna"}</div>
-                    </div>
-                  </>
-                )}
-              </div>
-
-              <div style={styles.separator}></div>
-
-              {role === 'admin' && renderMobileLink("/dashboard", "🛠️ Dashboard")}
-              {renderMobileLink("/", "🏠 Home")}
-              {renderMobileLink("/produk", "🛒 Produk")}
-              {renderMobileLink("/gabung", "🤝 Gabung Mitra")}
-              {renderMobileLink("/investor", "💼 Investor")}
-              {user ? (
-                <div onClick={() => { setMenuOpen(false); handleLogout(); }} style={styles.mobileLink}>🔓 Logout</div>
-              ) : (
-                renderMobileLink("/login", "🔐 Login Admin")
+      {isMobile ? (
+        <>
+          <div style={styles.hamburger} onClick={() => setMenuOpen(!menuOpen)}>
+            <div style={styles.bar}></div>
+            <div style={styles.bar}></div>
+            <div style={styles.bar}></div>
+          </div>
+          {menuOpen && <div style={styles.overlay} onClick={() => setMenuOpen(false)}></div>}
+          <div style={{ ...styles.mobileMenu, right: menuOpen ? '0' : '-100%' }}>
+            <div style={styles.mobileHeader}>
+              {user && (
+                <>
+                  <img
+                    src={user.photoURL || `https://ui-avatars.com/api/?name=${userData?.name || 'User'}`}
+                    alt="User"
+                    style={styles.avatar}
+                  />
+                  <div>
+                    <div style={styles.mobileUser}>{userData?.name || "Pengguna"}</div>
+                    <div style={styles.roleText}>{role || "pengguna"}</div>
+                  </div>
+                </>
               )}
             </div>
-          </>
-        ) : (
-          <div style={styles.desktopLinks}>
-            {user && (
-              <>
-                <img
-                  src={user.photoURL || "https://ui-avatars.com/api/?name=" + (userData?.name || "User")}
-                  alt="User"
-                  style={styles.avatarDesktop}
-                />
-                <div>
-                  <span style={styles.username}>{userData?.name}</span><br />
-                  <span style={styles.roleTextDesktop}>{role}</span>
-                </div>
-              </>
-            )}
-            {role === 'admin' && renderLink("/dashboard", "🛠️ Dashboard")}
-            {renderLink("/", "Home")}
-            {renderLink("/produk", "Produk")}
-            {renderLink("/gabung", "Gabung Mitra")}
-            {renderLink("/investor", "Investor")}
+            <div style={styles.separator}></div>
+            {role === 'admin' && renderMobileLink("/dashboard", "🛠️ Dashboard")}
+            {renderMobileLink("/", "🏠 Home")}
+            {renderMobileLink("/produk", "🛒 Produk")}
+            {renderMobileLink("/gabung", "🤝 Gabung Mitra")}
+            {renderMobileLink("/investor", "💼 Investor")}
             {user ? (
-              <div onClick={handleLogout} style={{ ...styles.link, cursor: 'pointer' }}>Logout</div>
+              <div onClick={() => { setMenuOpen(false); handleLogout(); }} style={styles.mobileLink}>🔓 Logout</div>
             ) : (
-              renderLink("/login", "Login Admin")
+              renderMobileLink("/login", "🔐 Login Admin")
             )}
           </div>
-        )}
-      </nav>
-    </>
+        </>
+      ) : (
+        <div style={styles.desktopLinks}>
+          {user && (
+            <>
+              <img
+                src={user.photoURL || `https://ui-avatars.com/api/?name=${userData?.name || 'User'}`}
+                alt="User"
+                style={styles.avatarDesktop}
+              />
+              <div>
+                <span style={styles.username}>{userData?.name || 'Pengguna'}</span><br />
+                <span style={styles.roleTextDesktop}>{role || 'pengguna'}</span>
+              </div>
+            </>
+          )}
+          {role === 'admin' && renderLink("/dashboard", "🛠️ Dashboard")}
+          {renderLink("/", "Home")}
+          {renderLink("/produk", "Produk")}
+          {renderLink("/gabung", "Gabung Mitra")}
+          {renderLink("/investor", "Investor")}
+          {user ? (
+            <div onClick={handleLogout} style={{ ...styles.link, cursor: 'pointer' }}>Logout</div>
+          ) : (
+            renderLink("/login", "Login Admin")
+          )}
+        </div>
+      )}
+    </nav>
   );
 }
-
-const styles = {
-  navbar: {
-    backgroundColor: '#1b5e20',
-    color: '#fff',
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: '12px 20px',
-    position: 'sticky',
-    top: 0,
-    zIndex: 2000,
-  },
-  left: {
-    display: 'flex',
-    alignItems: 'center',
-  },
-  brandWrapper: {
-    display: 'flex',
-    alignItems: 'center',
-    textDecoration: 'none',
-    color: '#fff',
-  },
-  logo: {
-    height: '40px',
-    marginRight: '10px',
-  },
-  brand: {
-    fontSize: '1.5rem',
-    fontWeight: 'bold',
-  },
-  desktopLinks: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '16px',
-  },
-  link: {
-    color: '#fff',
-    textDecoration: 'none',
-    fontWeight: '500',
-    padding: '8px 14px',
-    borderRadius: '6px',
-  },
-  username: {
-    fontWeight: 'bold',
-    color: '#f0f0f0',
-    fontSize: '0.95rem',
-  },
-  roleTextDesktop: {
-    fontSize: '0.75rem',
-    color: '#d9f2d9',
-  },
-  avatarDesktop: {
-    width: '34px',
-    height: '34px',
-    borderRadius: '50%',
-    objectFit: 'cover',
-  },
-  hamburger: {
-    display: 'flex',
-    flexDirection: 'column',
-    cursor: 'pointer',
-    gap: '4px',
-  },
-  bar: {
-    width: '25px',
-    height: '3px',
-    backgroundColor: '#fff',
-  },
-  mobileMenu: {
-    position: 'fixed',
-    top: 0,
-    right: 0,
-    width: '75%',
-    height: '100vh',
-    backgroundColor: '#f0f0f0',
-    color: '#333',
-    display: 'flex',
-    flexDirection: 'column',
-    padding: '20px',
-    gap: '14px',
-    zIndex: 2001,
-    boxShadow: '-3px 0 8px rgba(0,0,0,0.2)',
-    transition: 'right 0.3s ease-in-out',
-  },
-  mobileHeader: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '12px',
-    paddingBottom: '8px',
-  },
-  avatar: {
-    width: '44px',
-    height: '44px',
-    borderRadius: '50%',
-    objectFit: 'cover',
-  },
-  mobileUser: {
-    fontSize: '1rem',
-    fontWeight: 'bold',
-    color: '#1b5e20',
-  },
-  roleText: {
-    fontSize: '0.85rem',
-    color: '#555',
-    marginTop: '2px',
-  },
-  separator: {
-    borderBottom: '1px solid #ccc',
-    margin: '12px 0',
-  },
-  mobileLink: {
-    fontSize: '1.1rem',
-    padding: '10px',
-    textDecoration: 'none',
-    borderBottom: '1px solid #ccc',
-    color: '#1b5e20',
-  },
-  closeButton: {
-    alignSelf: 'flex-end',
-    fontSize: '1.5rem',
-    cursor: 'pointer',
-    color: '#1b5e20',
-  },
-  overlay: {
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    width: '100vw',
-    height: '100vh',
-    backgroundColor: 'rgba(0, 0, 0, 0.3)',
-    zIndex: 2000,
-  },
-};
-
-export default Navbar;

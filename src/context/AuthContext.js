@@ -1,37 +1,44 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+// src/context/AuthContext.js
+import { createContext, useContext, useEffect, useState } from 'react';
+import { auth, db } from '../firebase';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
-import { auth, db } from '../firebase';
 
-const AuthContext = createContext();
+export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [userData, setUserData] = useState(null); // data dari Firestore
+  const [role, setRole] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const logout = async () => {
-    await signOut(auth);
-    setUser(null);
+  const fetchUserData = async (uid) => {
+    try {
+      const userDoc = await getDoc(doc(db, "users", uid));
+      if (userDoc.exists()) {
+        const data = userDoc.data();
+        setUserData(data);
+        setRole(data.role || 'pengguna');
+      } else {
+        setUserData(null);
+        setRole('pengguna');
+      }
+    } catch (err) {
+      console.error("Gagal ambil data user:", err);
+      setUserData(null);
+      setRole('pengguna');
+    }
   };
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
-        try {
-          const userRef = doc(db, 'users', firebaseUser.uid);
-          const userSnap = await getDoc(userRef);
-          if (userSnap.exists()) {
-            setUser({ uid: firebaseUser.uid, ...userSnap.data() });
-          } else {
-            console.warn('Data Firestore user tidak ditemukan.');
-            setUser(null);
-          }
-        } catch (error) {
-          console.error('Gagal ambil user dari Firestore:', error);
-          setUser(null);
-        }
+        setUser(firebaseUser);
+        await fetchUserData(firebaseUser.uid);
       } else {
         setUser(null);
+        setUserData(null);
+        setRole(null);
       }
       setLoading(false);
     });
@@ -39,8 +46,10 @@ export const AuthProvider = ({ children }) => {
     return () => unsubscribe();
   }, []);
 
+  const logout = () => signOut(auth);
+
   return (
-    <AuthContext.Provider value={{ user, loading, logout }}>
+    <AuthContext.Provider value={{ user, userData, role, logout, loading }}>
       {children}
     </AuthContext.Provider>
   );
