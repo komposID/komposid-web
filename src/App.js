@@ -54,27 +54,12 @@ function App() {
          <Route path="upload" element={<UploadFile />} />
          <Route path="AdminLayout" element={<AdminLayout>} />
          </Route>
-         </Route>
 
           {/* 👤 Role: Investor */}
-          <Route
-            path="/investor-panel"
-            element={
-              <PrivateRoute requiredRole="investor">
-                <InvestorPanel />
-              </PrivateRoute>
-            }
-          />
+          <Route path="/investor-panel" element={<PrivateRoute requiredRole="investor"><InvestorPanel /></PrivateRoute>}/>
 
           {/* 👤 Role: Mitra */}
-          <Route
-            path="/mitra-panel"
-            element={
-              <PrivateRoute requiredRole="mitra">
-                <MitraPanel />
-              </PrivateRoute>
-            }
-          />
+          <Route path="/mitra-panel" element={<PrivateRoute requiredRole="mitra"><MitraPanel /></PrivateRoute>}/>
         </Routes>
 
         <Footer />
