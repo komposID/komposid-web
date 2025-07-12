@@ -52,7 +52,7 @@ function App() {
          <Route path="investor" element={<KelolaInvestor />} />
          <Route path="pengguna" element={<KelolaPengguna />} />
          <Route path="upload" element={<UploadFile />} />
-         <Route path="AdminLayout" element={ </AdminLayout>}/>
+         <Route path="AdminLayout" element={<AdminLayout>} />
          </Route>
          </Route>
 
