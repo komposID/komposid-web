@@ -17,6 +17,7 @@ import InvestorPanel from './pages/InvestorPanel';
 import { AuthProvider } from './context/AuthContext';
 import PrivateRoute from './components/PrivateRoute';
 import AdminRoute from './components/AdminRoute'; // ✅ Tambahkan import ini
+import Unauthorized from './pages/Unauthorized';
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
           <Route path="/login" element={<LoginAdmin />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/investor" element={<Investor />} />
+          <Route path="/unauthorized" element={<Unauthorized />} />
 
           {/* ❌ Halaman jika role tidak diizinkan */}
           <Route path="/unauthorized" element={
