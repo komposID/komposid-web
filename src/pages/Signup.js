@@ -9,6 +9,24 @@ import {
 import { auth, db } from '../firebase';
 import { setDoc, doc, serverTimestamp } from 'firebase/firestore';
 
+import { useEffect } from 'react';
+import { useAuth } from '../context/AuthContext';
+
+function Signup() {
+  const { user, role, loading } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!loading && user) {
+      if (role === 'admin') navigate('/dashboard');
+      else if (role === 'mitra') navigate('/mitra-panel');
+      else if (role === 'investor') navigate('/investor-panel');
+      else navigate('/');
+    }
+  }, [user, role, loading, navigate]);
+
+  if (loading || user) return null;
+
 function Signup() {
   const [name, setName] = useState('');
   const [identifier, setIdentifier] = useState('');
