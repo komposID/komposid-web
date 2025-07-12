@@ -1,33 +1,35 @@
-/* Sidebar.css */
+/* src/components/Sidebar.css */
 .sidebar {
   width: 220px;
-  background-color: #141428;
-  color: #fff;
-  padding: 20px;
   height: 100vh;
+  background-color: #1e1e2f;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  padding-top: 1rem;
   position: fixed;
 }
 
-.sidebar h2 {
-  font-size: 20px;
-  margin-bottom: 30px;
-}
-
-.sidebar ul {
-  list-style: none;
-  padding: 0;
-}
-
-.sidebar ul li {
-  margin: 15px 0;
-}
-
-.sidebar ul li a {
+.menu-item {
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
   text-decoration: none;
-  color: #fff;
-  font-weight: bold;
+  color: #bbb;
+  transition: 0.3s;
 }
 
-.sidebar ul li a:hover {
-  text-decoration: underline;
+.menu-item:hover {
+  background-color: #333;
+  color: #fff;
+}
+
+.menu-item.active {
+  background-color: #4b5cff;
+  color: white;
+}
+
+.label {
+  font-size: 14px;
 }

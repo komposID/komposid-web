@@ -1,20 +1,32 @@
 // src/components/Sidebar.js
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import './Sidebar.css';
+import { FaHome, FaBox, FaUsers, FaUserShield, FaUpload } from 'react-icons/fa';
 
 const Sidebar = () => {
+  const location = useLocation();
+
+  const menu = [
+    { label: 'Dashboard', path: '/dashboard', icon: <FaHome /> },
+    { label: 'Kelola Produk', path: '/dashboard/produk', icon: <FaBox /> },
+    { label: 'Kelola Mitra', path: '/admin/mitra', icon: <FaUsers /> },
+    { label: 'Kelola Investor', path: '/admin/investor', icon: <FaUserShield /> },
+    { label: 'Upload File', path: '/admin/upload', icon: <FaUpload /> },
+  ];
+
   return (
     <div className="sidebar">
-      <h2>⚙️ Admin Panel</h2>
-      <ul>
-        <li><Link to="/admin">📊 Ringkasan</Link></li>
-        <li><Link to="/admin/produk">📦 Kelola Produk</Link></li>
-        <li><Link to="/admin/mitra">🤝 Kelola Mitra</Link></li>
-        <li><Link to="/admin/investor">💼 Kelola Investor</Link></li>
-        <li><Link to="/admin/pengguna">👥 Kelola Pengguna</Link></li>
-        <li><Link to="/admin/upload">📁 Upload File</Link></li>
-      </ul>
+      {menu.map((item) => (
+        <Link
+          key={item.path}
+          to={item.path}
+          className={`menu-item ${location.pathname === item.path ? 'active' : ''}`}
+        >
+          {item.icon}
+          <span className="label">{item.label}</span>
+        </Link>
+      ))}
     </div>
   );
 };
