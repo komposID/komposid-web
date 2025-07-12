@@ -64,6 +64,14 @@ function App() {
               </PrivateRoute>
             }
           />
+<Route
+  path="/dashboard/produk"
+  element={
+    <PrivateRoute requiredRole="admin">
+      <KelolaProduk />
+    </PrivateRoute>
+  }
+/>
         </Routes>
 
         <Footer />
