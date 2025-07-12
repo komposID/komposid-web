@@ -1,28 +1,42 @@
 // src/pages/Dashboard.js
 import React from 'react';
-import { Link, Outlet } from 'react-router-dom';
-import './Dashboard.css';
+import { Link } from 'react-router-dom';
+import './Dashboard.css'; // jika pakai CSS manual
 
 function Dashboard() {
   return (
-    <div className="dashboard-container">
-      <aside className="sidebar">
-        <h2>⚙️ Admin Panel</h2>
-        <nav>
-          <ul>
-            <li><Link to="/dashboard">📊 Ringkasan</Link></li>
-            <li><Link to="/dashboard/produk">📦 Kelola Produk</Link></li>
-            <li><Link to="/dashboard/mitra">🤝 Kelola Mitra</Link></li>
-            <li><Link to="/dashboard/investor">💼 Kelola Investor</Link></li>
-            <li><Link to="/dashboard/pengguna">👥 Kelola Pengguna</Link></li>
-            <li><Link to="/dashboard/upload">📁 Upload File</Link></li>
-          </ul>
-        </nav>
-      </aside>
+    <div className="admin-dashboard">
+      <header className="admin-header">
+        <h1>📊 Admin Dashboard</h1>
+        <p>Selamat datang di halaman admin. Silakan pilih menu pengelolaan:</p>
+      </header>
 
-      <main className="main-content">
-        <Outlet />
-      </main>
+      <div className="dashboard-grid">
+        <Link to="/dashboard/produk" className="dashboard-card">
+          <h3>🛒 Kelola Produk</h3>
+          <p>Lihat, tambah, edit dan hapus produk</p>
+        </Link>
+
+        <Link to="/admin/mitra" className="dashboard-card">
+          <h3>🤝 Kelola Mitra</h3>
+          <p>Daftar dan status mitra</p>
+        </Link>
+
+        <Link to="/admin/investor" className="dashboard-card">
+          <h3>💼 Kelola Investor</h3>
+          <p>Data dan status investor</p>
+        </Link>
+
+        <Link to="/admin/upload" className="dashboard-card">
+          <h3>📁 Upload File</h3>
+          <p>Unggah modul atau dokumen lainnya</p>
+        </Link>
+
+        <Link to="/admin/pengguna" className="dashboard-card">
+          <h3>👥 Kelola Pengguna</h3>
+          <p>Manajemen user dan akses role</p>
+        </Link>
+      </div>
     </div>
   );
 }
