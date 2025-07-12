@@ -11,17 +11,16 @@ import GabungMitra from './pages/GabungMitra';
 import LoginAdmin from './pages/LoginAdmin';
 import Signup from './pages/Signup';
 import Investor from './pages/Investor';
-import Unauthorized from './pages/Unauthorized';
-
 import Dashboard from './pages/Dashboard';
+import InvestorPanel from './pages/InvestorPanel';
+import MitraPanel from './pages/MitraPanel';
+import UploadFile from './pages/UploadFile';
+
 import KelolaProduk from './pages/KelolaProduk';
 import KelolaMitra from './pages/KelolaMitra';
 import KelolaInvestor from './pages/KelolaInvestor';
 import KelolaPengguna from './pages/KelolaPengguna';
-import InvestorPanel from './pages/InvestorPanel';
-import MitraPanel from './pages/MitraPanel';
-import UploadFile from './pages/UploadFile';
-import AdminLayout from './components/AdminLayout';
+import Unauthorized from './pages/Unauthorized';
 
 import { AuthProvider } from './context/AuthContext';
 import PrivateRoute from './components/PrivateRoute';
@@ -34,7 +33,7 @@ function App() {
         <Navbar />
 
         <Routes>
-          {/* 🌐 Halaman Umum */}
+          {/* 🔓 Public */}
           <Route path="/" element={<Home />} />
           <Route path="/produk" element={<Produk />} />
           <Route path="/gabung" element={<GabungMitra />} />
@@ -43,22 +42,35 @@ function App() {
           <Route path="/investor" element={<Investor />} />
           <Route path="/unauthorized" element={<Unauthorized />} />
 
-          {/* 🔐 Hanya admin */}
-         <Route element={<AdminRoute />}>
-         <Route path="/dashboard" element={<Dashboard />}>
-         <Route index element={<div>Selamat datang di Dashboard Admin</div>} />
-         <Route path="produk" element={<KelolaProduk />} />
-         <Route path="mitra" element={<KelolaMitra />} />
-         <Route path="investor" element={<KelolaInvestor />} />
-         <Route path="pengguna" element={<KelolaPengguna />} />
-         <Route path="upload" element={<UploadFile />} />
-         <Route path="AdminLayout" element={<AdminLayout>} />
+          {/* 🔐 Admin */}
+          <Route element={<AdminRoute />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/admin/produk" element={<KelolaProduk />} />
+            <Route path="/admin/mitra" element={<KelolaMitra />} />
+            <Route path="/admin/investor" element={<KelolaInvestor />} />
+            <Route path="/admin/pengguna" element={<KelolaPengguna />} />
+            <Route path="/admin/upload" element={<UploadFile />} />
+          </Route>
 
-          {/* 👤 Role: Investor */}
-          <Route path="/investor-panel" element={<PrivateRoute requiredRole="investor"><InvestorPanel /></PrivateRoute>}/>
+          {/* 🔐 Investor */}
+          <Route
+            path="/investor-panel"
+            element={
+              <PrivateRoute requiredRole="investor">
+                <InvestorPanel />
+              </PrivateRoute>
+            }
+          />
 
-          {/* 👤 Role: Mitra */}
-          <Route path="/mitra-panel" element={<PrivateRoute requiredRole="mitra"><MitraPanel /></PrivateRoute>}/>
+          {/* 🔐 Mitra */}
+          <Route
+            path="/mitra-panel"
+            element={
+              <PrivateRoute requiredRole="mitra">
+                <MitraPanel />
+              </PrivateRoute>
+            }
+          />
         </Routes>
 
         <Footer />
