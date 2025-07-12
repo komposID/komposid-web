@@ -20,6 +20,7 @@ import AdminRoute from './components/AdminRoute'; // ✅ Tambahkan import ini
 import Unauthorized from './pages/Unauthorized';
 
 import KelolaProduk from './pages/KelolaProduk';
+import KelolaMitra from './pages/KelolaMitra';
 
 function App() {
   return (
@@ -74,6 +75,9 @@ function App() {
     </PrivateRoute>
   }
 />
+
+<Route path="/admin/mitra" element={<KelolaMitra />} />
+
         </Routes>
 
         <Footer />

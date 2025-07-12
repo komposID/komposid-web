@@ -1,0 +1,36 @@
+.mitra-container {
+  padding: 20px;
+  background-color: #fafafa;
+}
+
+.mitra-title {
+  font-size: 1.6rem;
+  color: #33691e;
+  margin-bottom: 20px;
+}
+
+.mitra-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+}
+
+.mitra-table th, .mitra-table td {
+  padding: 12px;
+  border: 1px solid #ccc;
+  text-align: left;
+}
+
+.toggle-btn {
+  padding: 6px 10px;
+  font-size: 0.9rem;
+  background-color: #43a047;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.toggle-btn:hover {
+  background-color: #2e7d32;
+}
