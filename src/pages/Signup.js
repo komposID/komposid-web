@@ -14,6 +14,11 @@ function Signup() {
   const { user, role, loading } = useAuth();
   const navigate = useNavigate();
 
+  const [name, setName] = useState('');
+  const [identifier, setIdentifier] = useState('');
+  const [password, setPassword] = useState('');
+
+  // 🔐 Auto-redirect jika sudah login
   useEffect(() => {
     if (!loading && user) {
       if (role === 'admin') navigate('/dashboard');
@@ -24,10 +29,6 @@ function Signup() {
   }, [user, role, loading, navigate]);
 
   if (loading || user) return null;
-
-  const [name, setName] = useState('');
-  const [identifier, setIdentifier] = useState('');
-  const [password, setPassword] = useState('');
 
   const handleSignup = async (e) => {
     e.preventDefault();
@@ -118,7 +119,11 @@ function Signup() {
 
         <div style={{ margin: '16px 0' }}>
           <button onClick={handleGoogleSignup} style={styles.socialBtn}>
-            <img src="/assets/google-icon.png" alt="Google" style={styles.icon} />
+            <img
+              src="/assets/google-icon.png"
+              alt="Google"
+              style={styles.icon}
+            />
             Daftar / Login dengan Google
           </button>
         </div>

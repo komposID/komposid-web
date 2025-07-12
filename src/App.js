@@ -19,6 +19,8 @@ import PrivateRoute from './components/PrivateRoute';
 import AdminRoute from './components/AdminRoute'; // ✅ Tambahkan import ini
 import Unauthorized from './pages/Unauthorized';
 
+import KelolaProduk from './pages/KelolaProduk';
+
 function App() {
   return (
     <AuthProvider>
