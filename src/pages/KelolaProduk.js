@@ -1,146 +1,48 @@
-// src/pages/KelolaProduk.js
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
+import { getDocs, collection } from 'firebase/firestore';
 import { db } from '../firebase';
-import {
-  collection,
-  getDocs,
-  addDoc,
-  deleteDoc,
-  doc,
-  updateDoc,
-} from 'firebase/firestore';
 import './KelolaProduk.css';
 
 function KelolaProduk() {
-  const [produk, setProduk] = useState([]);
-  const [nama, setNama] = useState('');
-  const [harga, setHarga] = useState('');
-  const [stok, setStok] = useState('');
-  const [deskripsi, setDeskripsi] = useState('');
-  const [gambar, setGambar] = useState('');
-  const [editId, setEditId] = useState(null);
+  const [produkList, setProdukList] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const produkRef = collection(db, 'produk');
-
-  const fetchProduk = async () => {
-    const data = await getDocs(produkRef);
-    setProduk(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-  };
+  const fetchProduk = useCallback(async () => {
+    try {
+      const snapshot = await getDocs(collection(db, "produk"));
+      const list = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+      setProdukList(list);
+      setLoading(false);
+    } catch (error) {
+      console.error("Gagal mengambil data produk:", error);
+      setLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
     fetchProduk();
-  }, []);
-useEffect(() => {
-  fetchProduk();
-}, [fetchProduk]); // tambahkan ini agar lulus ESLint
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const produkData = {
-      nama,
-      harga: parseInt(harga),
-      stok: parseInt(stok),
-      deskripsi,
-      gambar,
-    };
-
-    try {
-      if (editId) {
-        await updateDoc(doc(db, 'produk', editId), produkData);
-        setEditId(null);
-      } else {
-        await addDoc(produkRef, produkData);
-      }
-      resetForm();
-      fetchProduk();
-    } catch (error) {
-      alert('Gagal menyimpan produk: ' + error.message);
-    }
-  };
-
-  const handleDelete = async (id) => {
-    if (window.confirm('Hapus produk ini?')) {
-      await deleteDoc(doc(db, 'produk', id));
-      fetchProduk();
-    }
-  };
-
-  const handleEdit = (item) => {
-    setNama(item.nama);
-    setHarga(item.harga);
-    setStok(item.stok);
-    setDeskripsi(item.deskripsi);
-    setGambar(item.gambar);
-    setEditId(item.id);
-  };
-
-  const resetForm = () => {
-    setNama('');
-    setHarga('');
-    setStok('');
-    setDeskripsi('');
-    setGambar('');
-    setEditId(null);
-  };
+  }, [fetchProduk]);
 
   return (
     <div className="produk-container">
-      <h2>📦 Kelola Produk Kompos</h2>
+      <h2 className="produk-title">📦 Daftar Produk</h2>
 
-      <form onSubmit={handleSubmit} className="produk-form">
-        <input
-          type="text"
-          placeholder="Nama produk"
-          value={nama}
-          onChange={(e) => setNama(e.target.value)}
-          required
-        />
-        <input
-          type="number"
-          placeholder="Harga"
-          value={harga}
-          onChange={(e) => setHarga(e.target.value)}
-          required
-        />
-        <input
-          type="number"
-          placeholder="Stok"
-          value={stok}
-          onChange={(e) => setStok(e.target.value)}
-          required
-        />
-        <input
-          type="text"
-          placeholder="URL Gambar"
-          value={gambar}
-          onChange={(e) => setGambar(e.target.value)}
-        />
-        <textarea
-          placeholder="Deskripsi produk"
-          value={deskripsi}
-          onChange={(e) => setDeskripsi(e.target.value)}
-        />
-        <button type="submit">{editId ? '💾 Update' : '➕ Tambah'}</button>
-        {editId && <button onClick={resetForm}>❌ Batal</button>}
-      </form>
-
-      <ul className="produk-list">
-        {produk.map((item) => (
-          <li key={item.id} className="produk-item">
-            <img src={item.gambar} alt={item.nama} />
-            <div>
-              <h4>{item.nama}</h4>
-              <p>Rp {item.harga?.toLocaleString()}</p>
-              <p>Stok: {item.stok}</p>
-              <p>{item.deskripsi}</p>
-              <div>
-                <button onClick={() => handleEdit(item)}>✏️ Edit</button>
-                <button onClick={() => handleDelete(item.id)}>🗑️ Hapus</button>
-              </div>
-            </div>
-          </li>
-        ))}
-      </ul>
+      {loading ? (
+        <p>Memuat data produk...</p>
+      ) : (
+        <ul className="produk-list">
+          {produkList.map((produk) => (
+            <li key={produk.id} className="produk-item">
+              <strong>{produk.nama}</strong><br />
+              <span>Harga: Rp{produk.harga}</span><br />
+              <span>Stok: {produk.stok}</span>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
