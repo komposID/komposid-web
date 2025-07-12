@@ -1,34 +1,27 @@
 // src/components/Sidebar.js
-import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import './Sidebar.css';
-import { FaHome, FaBox, FaUsers, FaUserShield, FaUpload } from 'react-icons/fa';
 
-const Sidebar = () => {
-  const location = useLocation();
+function Sidebar() {
+  const [collapsed, setCollapsed] = useState(false);
 
-  const menu = [
-    { label: 'Dashboard', path: '/dashboard', icon: <FaHome /> },
-    { label: 'Kelola Produk', path: '/dashboard/produk', icon: <FaBox /> },
-    { label: 'Kelola Mitra', path: '/admin/mitra', icon: <FaUsers /> },
-    { label: 'Kelola Investor', path: '/admin/investor', icon: <FaUserShield /> },
-    { label: 'Upload File', path: '/admin/upload', icon: <FaUpload /> },
-  ];
+  const toggleSidebar = () => setCollapsed(!collapsed);
 
   return (
-    <div className="sidebar">
-      {menu.map((item) => (
-        <Link
-          key={item.path}
-          to={item.path}
-          className={`menu-item ${location.pathname === item.path ? 'active' : ''}`}
-        >
-          {item.icon}
-          <span className="label">{item.label}</span>
-        </Link>
-      ))}
+    <div className={`sidebar ${collapsed ? 'collapsed' : ''}`}>
+      <button className="toggle-btn" onClick={toggleSidebar}>
+        {collapsed ? '➡️' : '⬅️'}
+      </button>
+      <ul>
+        <li><Link to="/dashboard">🏠 <span className="label">Dashboard</span></Link></li>
+        <li><Link to="/dashboard/produk">📦 <span className="label">Produk</span></Link></li>
+        <li><Link to="/admin/mitra">🤝 <span className="label">Mitra</span></Link></li>
+        <li><Link to="/admin/investor">💰 <span className="label">Investor</span></Link></li>
+        <li><Link to="/admin/upload">📁 <span className="label">Upload</span></Link></li>
+      </ul>
     </div>
   );
-};
+}
 
 export default Sidebar;

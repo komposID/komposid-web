@@ -1,25 +1,14 @@
+// src/pages/Dashboard.js
 import React from 'react';
-import './Dashboard.css';
-import { Link, Outlet } from 'react-router-dom';
+import Sidebar from '../components/Sidebar';
 
 function Dashboard() {
   return (
-    <div className="dashboard-container">
-      <aside className="sidebar">
-        <h2 className="logo">KOMP<span>OSID</span></h2>
-        <nav>
-          <ul>
-            <li><Link to="/dashboard">🏠 Beranda</Link></li>
-            <li><Link to="/dashboard/produk">📦 Kelola Produk</Link></li>
-            <li><Link to="/admin/mitra">🤝 Kelola Mitra</Link></li>
-            <li><Link to="/admin/investor">💼 Kelola Investor</Link></li>
-            <li><Link to="/admin/upload">📁 Upload File</Link></li>
-            <li><Link to="/admin/pengguna">👥 Pengguna</Link></li>
-          </ul>
-        </nav>
-      </aside>
-      <main className="main-content">
-        <Outlet /> {/* Untuk tampilkan konten halaman */}
+    <div style={{ display: 'flex' }}>
+      <Sidebar />
+      <main style={{ marginLeft: '220px', padding: '1rem', width: '100%' }}>
+        <h1>Selamat datang di Dashboard Admin</h1>
+        <p>Pilih menu di sebelah kiri untuk mulai mengelola.</p>
       </main>
     </div>
   );
