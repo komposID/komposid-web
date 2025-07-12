@@ -3,69 +3,95 @@ import './UploadFile.css';
 import { createClient } from '@supabase/supabase-js';
 
 const supabaseUrl = 'https://iepgyqsprvhwibwibkhu.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImllcGd5cXNwcnZod2lid2lia2h1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIyOTk1NDksImV4cCI6MjA2Nzg3NTU0OX0.1xEfdpkQKBPNHlzxJJJO6yntfQtXfvVGXVyBTzp3R68'; // jangan pakai secret key
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImllcGd5cXNwcnZod2lid2lia2h1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIyOTk1NDksImV4cCI6MjA2Nzg3NTU0OX0.1xEfdpkQKBPNHlzxJJJO6yntfQtXfvVGXVyBTzp3R68';
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-const kategoriList = ['Modul', 'Ebook', 'Formulir', 'Panduan', 'Gambar'];
+const kategoriList = ['Modul', 'Ebook', 'Panduan', 'Formulir', 'Gambar'];
 
 function UploadFile() {
   const [file, setFile] = useState(null);
   const [kategori, setKategori] = useState(kategoriList[0]);
-  const [files, setFiles] = useState([]);
+  const [dataFile, setDataFile] = useState([]);
   const [loading, setLoading] = useState(false);
-  const fileInputRef = useRef();
+  const fileRef = useRef();
 
-  const bucketName = 'file-pelatihan';
+  const fetchData = async () => {
+    const { data, error } = await supabase
+      .from('file_metadata')
+      .select('*')
+      .order('created_at', { ascending: false });
 
-  const fetchFiles = async () => {
-    const { data, error } = await supabase.storage.from(bucketName).list('', {
-      limit: 100,
-      offset: 0,
-      sortBy: { column: 'created_at', order: 'desc' },
-    });
-
-    if (!error) {
-      setFiles(data || []);
-    }
+    if (!error) setDataFile(data || []);
   };
 
   useEffect(() => {
-    fetchFiles();
+    fetchData();
   }, []);
 
   const handleUpload = async () => {
-    if (!file) return alert('⚠️ Silakan pilih file terlebih dahulu.');
+    if (!file) return alert('Pilih file terlebih dahulu.');
 
     setLoading(true);
 
-    const filePath = `${kategori}/${Date.now()}-${file.name}`;
-    const { error } = await supabase.storage.from(bucketName).upload(filePath, file);
+    const filename = `${Date.now()}-${file.name}`;
+    const path = `${kategori}/${filename}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from('file-pelatihan')
+      .upload(path, file);
+
+    if (uploadError) {
+      setLoading(false);
+      return alert('❌ Upload gagal: ' + uploadError.message);
+    }
+
+    const { data: urlData } = supabase
+      .storage
+      .from('file-pelatihan')
+      .getPublicUrl(path);
+
+    const { error: insertError } = await supabase
+      .from('file_metadata')
+      .insert({
+        nama_file: file.name,
+        kategori,
+        path,
+        url: urlData.publicUrl,
+      });
 
     setLoading(false);
 
-    if (error) {
-      alert('❌ Upload gagal: ' + error.message);
-    } else {
-      alert('✅ File berhasil diupload.');
-      setFile(null);
-      if (fileInputRef.current) fileInputRef.current.value = '';
-      fetchFiles();
+    if (insertError) {
+      return alert('Gagal menyimpan metadata.');
     }
+
+    alert('✅ File berhasil diupload!');
+    setFile(null);
+    fileRef.current.value = '';
+    fetchData();
   };
 
-  const handleDelete = async (fileName) => {
-    const { error } = await supabase.storage.from(bucketName).remove([fileName]);
-    if (error) {
-      alert('❌ Gagal menghapus: ' + error.message);
-    } else {
-      alert('🗑️ File dihapus.');
-      fetchFiles();
-    }
-  };
+  const handleDelete = async (id, path) => {
+    const { error: deleteFileError } = await supabase
+      .storage
+      .from('file-pelatihan')
+      .remove([path]);
 
-  const getPublicUrl = (fileName) => {
-    const { data } = supabase.storage.from(bucketName).getPublicUrl(fileName);
-    return data.publicUrl;
+    if (deleteFileError) {
+      return alert('Gagal menghapus file dari storage.');
+    }
+
+    const { error: deleteMetaError } = await supabase
+      .from('file_metadata')
+      .delete()
+      .eq('id', id);
+
+    if (deleteMetaError) {
+      return alert('File dihapus dari storage, tapi gagal dari metadata.');
+    }
+
+    alert('🗑️ File berhasil dihapus.');
+    fetchData();
   };
 
   return (
@@ -74,19 +100,17 @@ function UploadFile() {
 
       <div className="upload-form">
         <select value={kategori} onChange={(e) => setKategori(e.target.value)}>
-          {kategoriList.map((k) => (
-            <option key={k} value={k}>{k}</option>
-          ))}
+          {kategoriList.map(k => <option key={k}>{k}</option>)}
         </select>
 
-        <input type="file" ref={fileInputRef} onChange={(e) => setFile(e.target.files[0])} />
+        <input type="file" ref={fileRef} onChange={(e) => setFile(e.target.files[0])} />
+
         <button onClick={handleUpload} disabled={loading}>
-          {loading ? 'Uploading...' : 'Upload'}
+          {loading ? 'Mengunggah...' : 'Upload'}
         </button>
       </div>
 
       <hr />
-
       <h3>📄 Daftar File</h3>
       <table className="file-table">
         <thead>
@@ -97,30 +121,21 @@ function UploadFile() {
           </tr>
         </thead>
         <tbody>
-          {files.map((f) => {
-            let kategori = '-';
-            let namaFile = f.name;
-
-            if (f.name.includes('/')) {
-              const parts = f.name.split('/');
-              kategori = parts[0];
-              namaFile = parts.slice(1).join('/');
-            }
-
-            return (
-              <tr key={f.name}>
-                <td>{kategori}</td>
-                <td style={{ wordBreak: 'break-word' }}>
-                  <a href={getPublicUrl(f.name)} target="_blank" rel="noopener noreferrer">
-                    {namaFile.length > 50 ? namaFile.slice(0, 50) + '...' : namaFile}
-                  </a>
-                </td>
-                <td>
-                  <button onClick={() => handleDelete(f.name)} className="delete-btn">Hapus</button>
-                </td>
-              </tr>
-            );
-          })}
+          {dataFile.map((f) => (
+            <tr key={f.id}>
+              <td>{f.kategori}</td>
+              <td style={{ wordBreak: 'break-word' }}>
+                <a href={f.url} target="_blank" rel="noopener noreferrer">
+                  {f.nama_file.length > 40 ? f.nama_file.slice(0, 40) + '...' : f.nama_file}
+                </a>
+              </td>
+              <td>
+                <button className="delete-btn" onClick={() => handleDelete(f.id, f.path)}>
+                  Hapus
+                </button>
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>
