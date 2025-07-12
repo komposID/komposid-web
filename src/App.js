@@ -45,12 +45,12 @@ function App() {
 
           {/* 🔒 Panel ADMIN */}
           <Route element={<AdminRoute />}>
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/admin/produk" element={<KelolaProduk />} />
-            <Route path="/admin/mitra" element={<KelolaMitra />} />
-            <Route path="/admin/investor" element={<KelolaInvestor />} />
-            <Route path="/admin/pengguna" element={<KelolaPengguna />} />
-            <Route path="/admin/upload" element={<UploadFile />} />
+            <Route path="/dashboard" element={<AdminLayout><Dashboard/></AdminLayout>} />
+            <Route path="/admin/produk" element={<AdminLayout><KelolaProduk/></AdminLayout>} />
+            <Route path="/admin/mitra" element={<AdminLayout><KelolaMitra/></AdminLayout>}} />
+            <Route path="/admin/investor" element={<AdminLayout><KelolaInvestor/></AdminLayout>} />
+            <Route path="/admin/pengguna" element={<AdminLayout><KelolaPengguna/></AdminLayout>} />
+            <Route path="/admin/upload" element={<AdminLayout><UploadFile /></AdminLayout>} />
           </Route>
 
           {/* 👤 Panel INVESTOR */}
