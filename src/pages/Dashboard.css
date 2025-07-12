@@ -1,68 +1,31 @@
+/* src/pages/Dashboard.css */
 .dashboard-container {
-  padding: 24px;
-  background-color: #f8f9fa;
-  min-height: 100vh;
-}
-
-.dashboard-title {
-  font-size: 1.6rem;
-  color: #1b5e20;
-  font-weight: bold;
-  margin-bottom: 6px;
-}
-
-.dashboard-note {
-  font-size: 0.95rem;
-  color: #555;
-  margin-bottom: 20px;
-}
-
-.table-container {
-  overflow-x: auto;
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 0 8px rgba(0,0,0,0.05);
-}
-
-.user-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.95rem;
-}
-
-.user-table th,
-.user-table td {
-  border: 1px solid #ddd;
-  padding: 12px;
-  text-align: left;
-}
-
-.user-table th {
-  background-color: #e8f5e9;
-  color: #1b5e20;
-  font-weight: bold;
-}
-
-.user-table tr:nth-child(even) {
-  background-color: #f4f4f4;
-}
-
-.delete-btn {
-  background-color: #d32f2f;
-  color: white;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background 0.3s ease;
-}
-
-.delete-btn:hover {
-  background-color: #b71c1c;
-}
-
-.empty {
+  padding: 2rem;
+  max-width: 1000px;
+  margin: 0 auto;
   text-align: center;
-  color: #888;
-  font-style: italic;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.dashboard-card {
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 2rem;
+  text-decoration: none;
+  font-weight: bold;
+  color: #333;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transition: all 0.2s ease-in-out;
+}
+
+.dashboard-card:hover {
+  background-color: #f5f5f5;
+  transform: translateY(-5px);
 }
