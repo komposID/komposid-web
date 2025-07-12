@@ -8,8 +8,7 @@ function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  const { user, userData, role, logout, loading } = useAuth();
-
+  const { user, role, logout, loading } = useAuth();
   const isActive = (path) => location.pathname === path;
 
   useEffect(() => {
