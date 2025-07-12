@@ -22,6 +22,10 @@ import KelolaInvestor from './pages/KelolaInvestor';
 import { AuthProvider } from './context/AuthContext';
 import PrivateRoute from './components/PrivateRoute';
 import AdminRoute from './components/AdminRoute';
+import KelolaPengguna from './pages/KelolaPengguna';
+import KelolaPelatihan from './pages/KelolaPelatihan';
+
+import UploadFile from './components/UploadFile';
 
 function App() {
   return (
@@ -45,6 +49,10 @@ function App() {
             <Route path="/dashboard/produk" element={<KelolaProduk />} />
             <Route path="/admin/mitra" element={<KelolaMitra />} />
             <Route path="/admin/investor" element={<KelolaInvestor />} />
+            <Route path="/admin/users" element={<KelolaPengguna />} />
+            <Route path="/admin/pelatihan" element={<PrivateRoute requiredRole="admin"><KelolaPelatihan /></PrivateRoute>}/>
+           // Tambah di dalam <Routes>
+           <Route path="/admin/upload" element={<UploadFile />} />
           </Route>
 
           {/* 🔐 Role-based: Investor */}
