@@ -21,6 +21,7 @@ import KelolaPengguna from './pages/KelolaPengguna';
 import InvestorPanel from './pages/InvestorPanel';
 import MitraPanel from './pages/MitraPanel';
 import UploadFile from './pages/UploadFile';
+import AdminLayout from './components/AdminLayout';
 
 import { AuthProvider } from './context/AuthContext';
 import PrivateRoute from './components/PrivateRoute';
@@ -51,6 +52,8 @@ function App() {
          <Route path="investor" element={<KelolaInvestor />} />
          <Route path="pengguna" element={<KelolaPengguna />} />
          <Route path="upload" element={<UploadFile />} />
+         <Route path="upload" element={<UploadFile />} /></Routes></AdminLayout>}/>
+
          </Route>
          </Route>
 
