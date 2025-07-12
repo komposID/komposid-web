@@ -21,6 +21,8 @@ import Unauthorized from './pages/Unauthorized';
 
 import KelolaProduk from './pages/KelolaProduk';
 import KelolaMitra from './pages/KelolaMitra';
+import KelolaInvestor from './pages/KelolaInvestor';
+
 
 function App() {
   return (
@@ -77,6 +79,7 @@ function App() {
 />
 
 <Route path="/admin/mitra" element={<KelolaMitra />} />
+<Route path="/admin/investor" element={<KelolaInvestor />} />
 
         </Routes>
 

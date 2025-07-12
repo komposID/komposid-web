@@ -1,0 +1,36 @@
+.investor-container {
+  padding: 20px;
+  background-color: #f9f9f9;
+}
+
+.investor-title {
+  font-size: 1.6rem;
+  color: #0d47a1;
+  margin-bottom: 20px;
+}
+
+.investor-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+}
+
+.investor-table th, .investor-table td {
+  padding: 12px;
+  border: 1px solid #ccc;
+  text-align: left;
+}
+
+.toggle-btn {
+  padding: 6px 10px;
+  font-size: 0.9rem;
+  background-color: #1565c0;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.toggle-btn:hover {
+  background-color: #0d47a1;
+}
