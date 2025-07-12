@@ -1,17 +1,35 @@
 .upload-container {
   padding: 2rem;
+  max-width: 600px;
+  margin: auto;
+  background: #f9f9f9;
+  border-radius: 12px;
 }
+
 .upload-container input[type="file"] {
   margin-bottom: 1rem;
 }
+
 .upload-container button {
-  margin-left: 1rem;
-}
-.delete-btn {
-  margin-left: 1rem;
-  background: crimson;
-  color: white;
+  padding: 0.5rem 1rem;
+  margin-bottom: 1rem;
   border: none;
-  padding: 4px 8px;
+  background-color: #4CAF50;
+  color: white;
+  border-radius: 8px;
   cursor: pointer;
+}
+
+.upload-container button.delete-btn {
+  margin-left: 1rem;
+  background-color: #f44336;
+}
+
+.upload-container ul {
+  list-style: none;
+  padding: 0;
+}
+
+.upload-container li {
+  margin: 0.5rem 0;
 }
