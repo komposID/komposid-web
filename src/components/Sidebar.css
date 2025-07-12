@@ -1,35 +1,48 @@
-/* src/components/Sidebar.css */
 .sidebar {
   width: 220px;
-  height: 100vh;
-  background-color: #1e1e2f;
-  color: white;
-  display: flex;
-  flex-direction: column;
+  background: #1a1a2e;
+  color: #fff;
+  min-height: 100vh;
   padding-top: 1rem;
+  transition: width 0.3s ease;
   position: fixed;
 }
 
-.menu-item {
-  padding: 12px 20px;
+.sidebar.collapsed {
+  width: 70px;
+}
+
+.sidebar .top {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.toggle-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar li {
+  margin: 10px 0;
+}
+
+.sidebar a {
+  color: white;
+  text-decoration: none;
   display: flex;
   align-items: center;
-  gap: 12px;
-  text-decoration: none;
-  color: #bbb;
-  transition: 0.3s;
+  gap: 10px;
+  padding: 0.5rem 1rem;
 }
 
-.menu-item:hover {
-  background-color: #333;
-  color: #fff;
-}
-
-.menu-item.active {
-  background-color: #4b5cff;
-  color: white;
-}
-
-.label {
-  font-size: 14px;
+.sidebar li.active, .sidebar a:hover {
+  background-color: #16213e;
 }

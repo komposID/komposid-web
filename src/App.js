@@ -33,6 +33,7 @@ function App() {
         <Navbar />
 
         <Routes>
+
           {/* 🌐 Halaman Umum */}
           <Route path="/" element={<Home />} />
           <Route path="/produk" element={<Produk />} />
@@ -42,7 +43,7 @@ function App() {
           <Route path="/investor" element={<Investor />} />
           <Route path="/unauthorized" element={<Unauthorized />} />
 
-          {/* 🔐 Halaman Khusus Admin */}
+          {/* 🔒 Panel ADMIN */}
           <Route element={<AdminRoute />}>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/admin/produk" element={<KelolaProduk />} />
@@ -52,7 +53,7 @@ function App() {
             <Route path="/admin/upload" element={<UploadFile />} />
           </Route>
 
-          {/* 👤 Panel Investor */}
+          {/* 👤 Panel INVESTOR */}
           <Route
             path="/investor-panel"
             element={
@@ -62,7 +63,7 @@ function App() {
             }
           />
 
-          {/* 🤝 Panel Mitra */}
+          {/* 🤝 Panel MITRA */}
           <Route
             path="/mitra-panel"
             element={
