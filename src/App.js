@@ -1,6 +1,7 @@
 // src/App.js
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 
@@ -12,20 +13,18 @@ import Signup from './pages/Signup';
 import Investor from './pages/Investor';
 import Unauthorized from './pages/Unauthorized';
 
-import DashboardHome from './pages/DashboardHome';
+import Dashboard from './pages/Dashboard';
 import KelolaProduk from './pages/KelolaProduk';
 import KelolaMitra from './pages/KelolaMitra';
 import KelolaInvestor from './pages/KelolaInvestor';
 import KelolaPengguna from './pages/KelolaPengguna';
-import UploadFile from './pages/UploadFile';
-
 import InvestorPanel from './pages/InvestorPanel';
 import MitraPanel from './pages/MitraPanel';
+import UploadFile from './pages/UploadFile';
 
 import { AuthProvider } from './context/AuthContext';
 import PrivateRoute from './components/PrivateRoute';
 import AdminRoute from './components/AdminRoute';
-import AdminLayout from './components/AdminLayout';
 
 function App() {
   return (
@@ -43,23 +42,17 @@ function App() {
           <Route path="/investor" element={<Investor />} />
           <Route path="/unauthorized" element={<Unauthorized />} />
 
-          {/* 🔐 Halaman untuk Admin - Layout Admin */}
-          <Route
-            element={
-              <PrivateRoute requiredRole="admin">
-                <AdminLayout />
-              </PrivateRoute>
-            }
-          >
-            <Route path="/dashboard" element={<DashboardHome />} />
+          {/* 🔐 Hanya admin */}
+          <Route element={<AdminRoute />}>
+            <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/dashboard/produk" element={<KelolaProduk />} />
-            <Route path="/admin/mitra" element={<KelolaMitra />} />
-            <Route path="/admin/investor" element={<KelolaInvestor />} />
-            <Route path="/admin/pengguna" element={<KelolaPengguna />} />
-            <Route path="/admin/upload" element={<UploadFile />} />
+            <Route path="/dashboard/mitra" element={<KelolaMitra />} />
+            <Route path="/dashboard/investor" element={<KelolaInvestor />} />
+            <Route path="/dashboard/pengguna" element={<KelolaPengguna />} />
+            <Route path="/dashboard/upload" element={<UploadFile />} />
           </Route>
 
-          {/* 🔐 Halaman untuk Investor */}
+          {/* 👤 Role: Investor */}
           <Route
             path="/investor-panel"
             element={
@@ -69,7 +62,7 @@ function App() {
             }
           />
 
-          {/* 🔐 Halaman untuk Mitra */}
+          {/* 👤 Role: Mitra */}
           <Route
             path="/mitra-panel"
             element={
