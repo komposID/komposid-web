@@ -33,7 +33,7 @@ function App() {
         <Navbar />
 
         <Routes>
-          {/* 🌐 Public Pages */}
+          {/* 🌐 Halaman Umum */}
           <Route path="/" element={<Home />} />
           <Route path="/produk" element={<Produk />} />
           <Route path="/gabung" element={<GabungMitra />} />
@@ -42,7 +42,7 @@ function App() {
           <Route path="/investor" element={<Investor />} />
           <Route path="/unauthorized" element={<Unauthorized />} />
 
-          {/* 🔐 Admin-only Routes */}
+          {/* 🔐 Halaman Khusus Admin */}
           <Route element={<AdminRoute />}>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/admin/produk" element={<KelolaProduk />} />
@@ -52,7 +52,7 @@ function App() {
             <Route path="/admin/upload" element={<UploadFile />} />
           </Route>
 
-          {/* 👥 Investor-only Panel */}
+          {/* 👤 Panel Investor */}
           <Route
             path="/investor-panel"
             element={
@@ -62,7 +62,7 @@ function App() {
             }
           />
 
-          {/* 👥 Mitra-only Panel */}
+          {/* 🤝 Panel Mitra */}
           <Route
             path="/mitra-panel"
             element={
