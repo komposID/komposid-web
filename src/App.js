@@ -53,7 +53,6 @@ function App() {
          <Route path="pengguna" element={<KelolaPengguna />} />
          <Route path="upload" element={<UploadFile />} />
          <Route path="AdminLayout" element={<AdminLayout>} />
-         </Route>
 
           {/* 👤 Role: Investor */}
           <Route path="/investor-panel" element={<PrivateRoute requiredRole="investor"><InvestorPanel /></PrivateRoute>}/>
