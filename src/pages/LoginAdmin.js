@@ -1,15 +1,27 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './LoginAdmin.css';
 import { Link, useNavigate } from 'react-router-dom';
 import { auth, db, signInWithGoogleAndSync } from '../firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
+import { useAuth } from '../context/AuthContext';
 
 function LoginAdmin() {
   const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
   const navigate = useNavigate();
+  const { user, role, loading } = useAuth();
+
+  // 🔄 Redirect otomatis jika sudah login
+  useEffect(() => {
+    if (!loading && user) {
+      if (role === "admin") navigate("/dashboard");
+      else if (role === "mitra") navigate("/mitra-panel");
+      else if (role === "investor") navigate("/investor-panel");
+      else navigate("/");
+    }
+  }, [user, role, loading, navigate]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -60,7 +72,6 @@ function LoginAdmin() {
               required
             />
           </div>
-
           <div className="form-group">
             <label htmlFor="password">🔑 Password</label>
             <input
