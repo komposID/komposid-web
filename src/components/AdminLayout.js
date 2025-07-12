@@ -6,31 +6,18 @@ import './AdminLayout.css';
 function AdminLayout() {
   const location = useLocation();
 
-  const menuItems = [
-    { path: '/dashboard', label: '🏠 Dashboard' },
-    { path: '/admin/mitra', label: '👥 Kelola Mitra' },
-    { path: '/admin/investor', label: '💼 Kelola Investor' },
-    { path: '/dashboard/produk', label: '📦 Kelola Produk' },
-    { path: '/admin/upload', label: '📁 Upload File' },
-    { path: '/admin/pengguna', label: '👤 Kelola Pengguna' },
-  ];
-
   return (
     <div className="admin-dashboard">
       <aside className="sidebar">
-        <h2 className="brand">KomposID</h2>
+        <h2>KomposID</h2>
         <nav>
           <ul>
-            {menuItems.map((item) => (
-              <li key={item.path}>
-                <Link
-                  to={item.path}
-                  className={location.pathname === item.path ? 'active' : ''}
-                >
-                  {item.label}
-                </Link>
-              </li>
-            ))}
+            <li><Link to="/dashboard">🏠 Dashboard</Link></li>
+            <li><Link to="/admin/mitra">👥 Kelola Mitra</Link></li>
+            <li><Link to="/admin/investor">💼 Kelola Investor</Link></li>
+            <li><Link to="/dashboard/produk">📦 Kelola Produk</Link></li>
+            <li><Link to="/admin/upload">📁 Upload File</Link></li>
+            <li><Link to="/admin/pengguna">👤 Kelola Pengguna</Link></li>
           </ul>
         </nav>
       </aside>

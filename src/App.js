@@ -25,7 +25,6 @@ import KelolaPengguna from './pages/KelolaPengguna';
 import { AuthProvider } from './context/AuthContext';
 import PrivateRoute from './components/PrivateRoute';
 import AdminRoute from './components/AdminRoute';
-import AdminLayout from './components/AdminLayout';
 
 function App() {
   return (
@@ -34,7 +33,6 @@ function App() {
         <Navbar />
 
         <Routes>
-
           {/* 🌐 Halaman Umum */}
           <Route path="/" element={<Home />} />
           <Route path="/produk" element={<Produk />} />
@@ -44,17 +42,17 @@ function App() {
           <Route path="/investor" element={<Investor />} />
           <Route path="/unauthorized" element={<Unauthorized />} />
 
-          {/* 🔒 Panel ADMIN */}
+          {/* 🔐 Halaman Khusus Admin */}
           <Route element={<AdminRoute />}>
-            <Route path="/dashboard" element={<AdminLayout><Dashboard/></AdminLayout>} />
-            <Route path="/admin/produk" element={<AdminLayout><KelolaProduk/></AdminLayout>} />
-            <Route path="/admin/mitra" element={<AdminLayout><KelolaMitra/></AdminLayout>} />
-            <Route path="/admin/investor" element={<AdminLayout><KelolaInvestor/></AdminLayout>} />
-            <Route path="/admin/pengguna" element={<AdminLayout><KelolaPengguna/></AdminLayout>} />
-            <Route path="/admin/upload" element={<AdminLayout><UploadFile /></AdminLayout>} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/admin/produk" element={<KelolaProduk />} />
+            <Route path="/admin/mitra" element={<KelolaMitra />} />
+            <Route path="/admin/investor" element={<KelolaInvestor />} />
+            <Route path="/admin/pengguna" element={<KelolaPengguna />} />
+            <Route path="/admin/upload" element={<UploadFile />} />
           </Route>
 
-          {/* 👤 Panel INVESTOR */}
+          {/* 👤 Panel Investor */}
           <Route
             path="/investor-panel"
             element={
@@ -64,7 +62,7 @@ function App() {
             }
           />
 
-          {/* 🤝 Panel MITRA */}
+          {/* 🤝 Panel Mitra */}
           <Route
             path="/mitra-panel"
             element={
