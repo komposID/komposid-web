@@ -54,6 +54,8 @@ function LoginAdmin() {
       alert('Login Google gagal: ' + error.message);
     }
   };
+if (loading) return null;
+if (user) return null;
 
   return (
     <div className="login-container">
