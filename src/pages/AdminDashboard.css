@@ -1,0 +1,28 @@
+.admin-dashboard {
+  padding: 2rem;
+  font-family: sans-serif;
+}
+
+.admin-menu {
+  list-style: none;
+  padding: 0;
+  margin-top: 1rem;
+}
+
+.admin-menu li {
+  margin-bottom: 10px;
+}
+
+.admin-menu a {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 8px;
+  text-decoration: none;
+  display: inline-block;
+  transition: background 0.2s;
+}
+
+.admin-menu a:hover {
+  background-color: #0056b3;
+}

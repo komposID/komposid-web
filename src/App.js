@@ -26,6 +26,8 @@ import AdminRoute from './components/AdminRoute';
 import AdminLayout from './components/AdminLayout';
 import DashboardHome from './pages/DashboardHome';
 
+import AdminDashboard from './pages/AdminDashboard';
+
 function App() {
   return (
     <AuthProvider>
@@ -50,6 +52,12 @@ function App() {
   <Route path="/admin/mitra" element={<KelolaMitra />} />
   <Route path="/admin/investor" element={<KelolaInvestor />} />
   <Route path="/admin/upload" element={<UploadFile />} />
+</Route>
+
+
+
+<Route element={<AdminRoute />}>
+  <Route path="/dashboard" element={<AdminDashboard />} />
 </Route>
 
           {/* 🔐 Role Investor */}
