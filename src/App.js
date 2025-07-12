@@ -43,14 +43,16 @@ function App() {
           <Route path="/unauthorized" element={<Unauthorized />} />
 
           {/* 🔐 Hanya admin */}
-          <Route element={<AdminRoute />}>
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/dashboard/produk" element={<KelolaProduk />} />
-            <Route path="/dashboard/mitra" element={<KelolaMitra />} />
-            <Route path="/dashboard/investor" element={<KelolaInvestor />} />
-            <Route path="/dashboard/pengguna" element={<KelolaPengguna />} />
-            <Route path="/dashboard/upload" element={<UploadFile />} />
-          </Route>
+         <Route element={<AdminRoute />}>
+         <Route path="/dashboard" element={<Dashboard />}>
+         <Route index element={<div>Selamat datang di Dashboard Admin</div>} />
+         <Route path="produk" element={<KelolaProduk />} />
+         <Route path="mitra" element={<KelolaMitra />} />
+         <Route path="investor" element={<KelolaInvestor />} />
+         <Route path="pengguna" element={<KelolaPengguna />} />
+         <Route path="upload" element={<UploadFile />} />
+         </Route>
+         </Route>
 
           {/* 👤 Role: Investor */}
           <Route
