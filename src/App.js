@@ -25,6 +25,7 @@ import KelolaPengguna from './pages/KelolaPengguna';
 import { AuthProvider } from './context/AuthContext';
 import PrivateRoute from './components/PrivateRoute';
 import AdminRoute from './components/AdminRoute';
+import AdminLayout from './components/AdminLayout';
 
 function App() {
   return (
