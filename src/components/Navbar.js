@@ -8,7 +8,7 @@ function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  const { user, role, logout } = useAuth();
+  const { user, userData, role, logout, loading } = useAuth();
 
   const isActive = (path) => location.pathname === path;
 
@@ -25,6 +25,9 @@ function Navbar() {
     await logout();
     navigate('/login');
   };
+
+
+if (loading) return null;
 
   const renderLink = (to, label) => (
     <Link

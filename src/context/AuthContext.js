@@ -1,32 +1,29 @@
 // src/context/AuthContext.js
-import { createContext, useContext, useEffect, useState } from "react";
-import { auth, db } from "../firebase";
+import { createContext, useContext, useState, useEffect } from "react";
 import { onAuthStateChanged, signOut } from "firebase/auth";
+import { auth, db } from "../firebase";
 import { doc, getDoc } from "firebase/firestore";
 
-const AuthContext = createContext();
+export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [role, setRole] = useState(null);
-  const [userData, setUserData] = useState(null); // untuk nama & foto jika perlu
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true); // 🔄 loading saat ambil role
 
-  const fetchUserRoleAndData = async (uid) => {
+  const fetchUserRole = async (uid) => {
     try {
-      const userDoc = await getDoc(doc(db, "users", uid));
-      if (userDoc.exists()) {
-        const data = userDoc.data();
+      const docRef = doc(db, "users", uid);
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        const data = docSnap.data();
         setRole(data.role || "pengguna");
-        setUserData(data);
       } else {
         setRole("pengguna");
-        setUserData(null);
       }
     } catch (err) {
-      console.error("Gagal ambil data user:", err);
+      console.error("Gagal mengambil role:", err);
       setRole("pengguna");
-      setUserData(null);
     }
   };
 
@@ -34,13 +31,12 @@ export const AuthProvider = ({ children }) => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
         setUser(firebaseUser);
-        await fetchUserRoleAndData(firebaseUser.uid);
+        await fetchUserRole(firebaseUser.uid);
       } else {
         setUser(null);
         setRole(null);
-        setUserData(null);
       }
-      setLoading(false);
+      setLoading(false); // 🔓 selesai proses loading
     });
 
     return () => unsubscribe();
@@ -49,7 +45,7 @@ export const AuthProvider = ({ children }) => {
   const logout = () => signOut(auth);
 
   return (
-    <AuthContext.Provider value={{ user, role, userData, logout, loading }}>
+    <AuthContext.Provider value={{ user, role, loading, logout }}>
       {children}
     </AuthContext.Provider>
   );
