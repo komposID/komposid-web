@@ -11,16 +11,16 @@ import GabungMitra from './pages/GabungMitra';
 import LoginAdmin from './pages/LoginAdmin';
 import Signup from './pages/Signup';
 import Investor from './pages/Investor';
+import Unauthorized from './pages/Unauthorized';
+
 import Dashboard from './pages/Dashboard';
 import InvestorPanel from './pages/InvestorPanel';
 import MitraPanel from './pages/MitraPanel';
 import UploadFile from './pages/UploadFile';
-
 import KelolaProduk from './pages/KelolaProduk';
 import KelolaMitra from './pages/KelolaMitra';
 import KelolaInvestor from './pages/KelolaInvestor';
 import KelolaPengguna from './pages/KelolaPengguna';
-import Unauthorized from './pages/Unauthorized';
 
 import { AuthProvider } from './context/AuthContext';
 import PrivateRoute from './components/PrivateRoute';
@@ -33,7 +33,7 @@ function App() {
         <Navbar />
 
         <Routes>
-          {/* 🔓 Public */}
+          {/* 🌐 Public Pages */}
           <Route path="/" element={<Home />} />
           <Route path="/produk" element={<Produk />} />
           <Route path="/gabung" element={<GabungMitra />} />
@@ -42,7 +42,7 @@ function App() {
           <Route path="/investor" element={<Investor />} />
           <Route path="/unauthorized" element={<Unauthorized />} />
 
-          {/* 🔐 Admin */}
+          {/* 🔐 Admin-only Routes */}
           <Route element={<AdminRoute />}>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/admin/produk" element={<KelolaProduk />} />
@@ -52,7 +52,7 @@ function App() {
             <Route path="/admin/upload" element={<UploadFile />} />
           </Route>
 
-          {/* 🔐 Investor */}
+          {/* 👥 Investor-only Panel */}
           <Route
             path="/investor-panel"
             element={
@@ -62,7 +62,7 @@ function App() {
             }
           />
 
-          {/* 🔐 Mitra */}
+          {/* 👥 Mitra-only Panel */}
           <Route
             path="/mitra-panel"
             element={
