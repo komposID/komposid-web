@@ -23,6 +23,8 @@ import Unauthorized from './pages/Unauthorized';
 import { AuthProvider } from './context/AuthContext';
 import PrivateRoute from './components/PrivateRoute';
 import AdminRoute from './components/AdminRoute';
+import AdminLayout from './components/AdminLayout';
+import DashboardHome from './pages/DashboardHome';
 
 function App() {
   return (
@@ -42,15 +44,13 @@ function App() {
           {/* ❌ Halaman jika akses ditolak */}
           <Route path="/unauthorized" element={<Unauthorized />} />
 
-          {/* 🔐 Hanya Admin */}
-          <Route element={<AdminRoute />}>
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/admin/produk" element={<KelolaProduk />} />
-            <Route path="/admin/mitra" element={<KelolaMitra />} />
-            <Route path="/admin/investor" element={<KelolaInvestor />} />
-            <Route path="/admin/pengguna" element={<KelolaPengguna />} />
-            <Route path="/admin/upload" element={<UploadFile />} />
-          </Route>
+<Route element={<PrivateRoute requiredRole="admin"><AdminLayout /></PrivateRoute>}>
+  <Route path="/dashboard" element={<DashboardHome />} />
+  <Route path="/dashboard/produk" element={<KelolaProduk />} />
+  <Route path="/admin/mitra" element={<KelolaMitra />} />
+  <Route path="/admin/investor" element={<KelolaInvestor />} />
+  <Route path="/admin/upload" element={<UploadFile />} />
+</Route>
 
           {/* 🔐 Role Investor */}
           <Route
