@@ -11,18 +11,17 @@ import LoginAdmin from './pages/LoginAdmin';
 import Investor from './pages/Investor';
 import Signup from './pages/Signup';
 import Dashboard from './pages/Dashboard';
-import MitraPanel from './pages/MitraPanel';
 import InvestorPanel from './pages/InvestorPanel';
+import MitraPanel from './pages/MitraPanel';
 
-import { AuthProvider } from './context/AuthContext';
-import PrivateRoute from './components/PrivateRoute';
-import AdminRoute from './components/AdminRoute'; // ✅ Tambahkan import ini
 import Unauthorized from './pages/Unauthorized';
-
 import KelolaProduk from './pages/KelolaProduk';
 import KelolaMitra from './pages/KelolaMitra';
 import KelolaInvestor from './pages/KelolaInvestor';
 
+import { AuthProvider } from './context/AuthContext';
+import PrivateRoute from './components/PrivateRoute';
+import AdminRoute from './components/AdminRoute';
 
 function App() {
   return (
@@ -40,27 +39,15 @@ function App() {
           <Route path="/investor" element={<Investor />} />
           <Route path="/unauthorized" element={<Unauthorized />} />
 
-          {/* ❌ Halaman jika role tidak diizinkan */}
-          <Route path="/unauthorized" element={
-            <div style={{ padding: '2rem', textAlign: 'center' }}>
-              ❌ Akses ditolak. Anda tidak memiliki izin untuk halaman ini.
-            </div>
-          } />
-
-          {/* 🔐 Hanya admin bisa akses */}
+          {/* 🔐 Role-based: Admin */}
           <Route element={<AdminRoute />}>
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/dashboard/produk" element={<KelolaProduk />} />
+            <Route path="/admin/mitra" element={<KelolaMitra />} />
+            <Route path="/admin/investor" element={<KelolaInvestor />} />
           </Route>
 
-          {/* 🔐 Role-based untuk mitra & investor */}
-          <Route
-            path="/mitra-panel"
-            element={
-              <PrivateRoute requiredRole="mitra">
-                <MitraPanel />
-              </PrivateRoute>
-            }
-          />
+          {/* 🔐 Role-based: Investor */}
           <Route
             path="/investor-panel"
             element={
@@ -69,18 +56,16 @@ function App() {
               </PrivateRoute>
             }
           />
-<Route
-  path="/dashboard/produk"
-  element={
-    <PrivateRoute requiredRole="admin">
-      <KelolaProduk />
-    </PrivateRoute>
-  }
-/>
 
-<Route path="/admin/mitra" element={<KelolaMitra />} />
-<Route path="/admin/investor" element={<KelolaInvestor />} />
-
+          {/* 🔐 Role-based: Mitra */}
+          <Route
+            path="/mitra-panel"
+            element={
+              <PrivateRoute requiredRole="mitra">
+                <MitraPanel />
+              </PrivateRoute>
+            }
+          />
         </Routes>
 
         <Footer />

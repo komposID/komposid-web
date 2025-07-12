@@ -1,0 +1,19 @@
+.mitra-container {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.mitra-card {
+  background: #f9f9f9;
+  padding: 16px;
+  margin-bottom: 16px;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+
+select {
+  margin-top: 8px;
+  padding: 6px;
+  font-size: 0.95rem;
+}
