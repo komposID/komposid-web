@@ -1,21 +1,47 @@
 // src/pages/AdminDashboard.js
 import React from 'react';
-import { Link } from 'react-router-dom';
 import './AdminDashboard.css';
+import { Link } from 'react-router-dom';
 
 function AdminDashboard() {
   return (
     <div className="admin-dashboard">
-      <h2>👨‍💼 Admin Dashboard</h2>
-      <p>Selamat datang di panel admin. Silakan kelola data menggunakan menu di bawah:</p>
+      <header className="admin-header">
+        <h1>🎛️ Admin Panel</h1>
+        <p>Selamat datang di pusat kendali sistem KomposID.</p>
+      </header>
 
-      <ul className="admin-menu">
-        <li><Link to="/admin/produk">📦 Kelola Produk</Link></li>
-        <li><Link to="/admin/mitra">🤝 Kelola Mitra</Link></li>
-        <li><Link to="/admin/investor">💰 Kelola Investor</Link></li>
-        <li><Link to="/admin/upload">📁 Upload File</Link></li>
-        <li><Link to="/admin/pengguna">👥 Kelola Pengguna</Link></li>
-      </ul>
+      <section className="admin-grid">
+        <Link to="/dashboard/produk" className="admin-card">
+          <h2>📦 Kelola Produk</h2>
+          <p>Manajemen produk dan persediaan.</p>
+        </Link>
+
+        <Link to="/admin/mitra" className="admin-card">
+          <h2>🤝 Kelola Mitra</h2>
+          <p>Data mitra dan status kerja sama.</p>
+        </Link>
+
+        <Link to="/admin/investor" className="admin-card">
+          <h2>💼 Kelola Investor</h2>
+          <p>Daftar investor dan kontribusi modal.</p>
+        </Link>
+
+        <Link to="/admin/upload" className="admin-card">
+          <h2>📁 Upload Dokumen</h2>
+          <p>Unggah modul dan file pelatihan.</p>
+        </Link>
+
+        <Link to="/admin/pengguna" className="admin-card">
+          <h2>👥 Kelola Pengguna</h2>
+          <p>Data pengguna sistem dan hak akses.</p>
+        </Link>
+
+        <Link to="/mitra-panel" className="admin-card">
+          <h2>🧰 Panel Mitra</h2>
+          <p>Fitur untuk mitra kompos dan laporan.</p>
+        </Link>
+      </section>
     </div>
   );
 }
