@@ -1,6 +1,4 @@
-// netlify/functions/google-login.js
-
-exports.handler = async (event, context) => {
+export async function handler(event, context) {
   return {
     statusCode: 302,
     headers: {
