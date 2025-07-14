@@ -12,6 +12,10 @@ import { MitraDashboard } from '../pages/dashboard/Mitra.js'
 import { InvestorDashboard } from '../pages/dashboard/Investor.js'
 import { PembeliDashboard } from '../pages/dashboard/Pembeli.js'
 
+//login dan signin
+import { Login } from '../pages/Login.js'
+
+
 export function router(app) {
   const route = window.location.hash.slice(1) || '/'
 
@@ -40,6 +44,11 @@ export function router(app) {
       return InvestorDashboard()
     case '/pembeli':
       return PembeliDashboard()
+
+    //login dan signout
+
+    case '/login':
+      return Login()
 
     default:
       return NotFound()
