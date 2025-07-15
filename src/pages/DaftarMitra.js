@@ -1,44 +1,38 @@
-import { MainLayout } from '../layouts/MainLayout.js'
-
 export function DaftarMitra() {
-  const content = `
-    <section class="py-10 max-w-xl mx-auto">
-      <h2 class="text-3xl font-bold text-green-700 mb-4 text-center">Gabung Jadi Mitra KomposID</h2>
-      <p class="text-gray-700 mb-6 text-center">
-        Dapatkan akses distribusi kompos, pelatihan, dan jaringan petani organik di seluruh Indonesia.
-      </p>
+  return {
+    html: `
+      <section class="py-10 max-w-2xl mx-auto">
+        <h2 class="text-3xl font-bold text-green-700 mb-4 text-center">Formulir Pendaftaran Mitra</h2>
+        <p class="text-gray-700 mb-6 text-center">
+          Bergabunglah menjadi mitra distribusi, produsen, atau edukator bersama KomposID. Bersama kita bisa hijaukan Indonesia.
+        </p>
 
-      <ul class="list-disc list-inside text-sm text-gray-600 mb-6">
-        <li>Harga khusus mitra</li>
-        <li>Dibantu promosi dan distribusi</li>
-        <li>Pelatihan dan pendampingan langsung</li>
-        <li>Komisi penjualan otomatis</li>
-      </ul>
+        <form id="formMitra" class="space-y-4 bg-white p-6 shadow rounded-lg">
+          <input type="text" name="nama" placeholder="Nama Lengkap" required class="w-full border p-2 rounded" />
+          <input type="email" name="email" placeholder="Email Aktif" required class="w-full border p-2 rounded" />
+          <input type="text" name="telepon" placeholder="No. Telepon / WA" required class="w-full border p-2 rounded" />
+          <select name="jenis" required class="w-full border p-2 rounded">
+            <option value="">Pilih Jenis Mitra</option>
+            <option value="Produsen">Produsen Kompos</option>
+            <option value="Distributor">Distributor / Reseller</option>
+            <option value="Edukator">Edukator Kompos</option>
+          </select>
+          <textarea name="alamat" placeholder="Alamat Lengkap" required class="w-full border p-2 rounded"></textarea>
+          <button type="submit" class="w-full bg-green-700 text-white py-2 rounded hover:bg-green-800">
+            Daftar Sekarang
+          </button>
+        </form>
 
-      <form id="form-mitra" class="space-y-4 bg-white shadow p-6 rounded-xl">
-        <div>
-          <label class="block text-sm font-medium">Nama Lengkap</label>
-          <input type="text" class="w-full border px-3 py-2 rounded" required>
-        </div>
-        <div>
-          <label class="block text-sm font-medium">Email</label>
-          <input type="email" class="w-full border px-3 py-2 rounded" required>
-        </div>
-        <div>
-          <label class="block text-sm font-medium">No HP / WA</label>
-          <input type="text" class="w-full border px-3 py-2 rounded" required>
-        </div>
-        <div>
-          <label class="block text-sm font-medium">Alamat Lengkap</label>
-          <textarea class="w-full border px-3 py-2 rounded" rows="3" required></textarea>
-        </div>
-        <div>
-          <label class="block text-sm font-medium">Kenapa ingin jadi mitra?</label>
-          <textarea class="w-full border px-3 py-2 rounded" rows="2"></textarea>
-        </div>
-        <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded w-full">Daftar Sekarang</button>
-      </form>
-    </section>
-  `
-  MainLayout(content)
+        <p id="notifMitra" class="text-center text-green-700 font-semibold mt-4 hidden">Pendaftaran berhasil! Kami akan segera menghubungi Anda.</p>
+      </section>
+    `,
+    onMount: () => {
+      document.getElementById('formMitra').addEventListener('submit', (e) => {
+        e.preventDefault()
+        // Simulasi submit (bisa diganti dengan Supabase atau backend API)
+        e.target.reset()
+        document.getElementById('notifMitra').classList.remove('hidden')
+      })
+    }
+  }
 }

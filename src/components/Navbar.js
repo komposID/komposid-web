@@ -2,7 +2,7 @@ import { userSession } from '../store/user.js'
 
 export function Navbar() {
   return `
-    <nav class="bg-green-800 text-white px-4 py-3 flex justify-between items-center">
+    <nav class="bg-green-800 text-white px-4 py-3 flex justify-between items-center fixed top-0 w-full z-50">
       <a href="#/" class="text-xl font-bold">KomposID</a>
       <button id="menu-toggle" class="md:hidden">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"
@@ -16,18 +16,19 @@ export function Navbar() {
       </div>
     </nav>
 
-    <!-- Drawer Menu -->
+    <!-- Drawer (mobile menu) -->
     <div id="drawer" class="fixed top-0 right-0 h-full w-64 bg-white text-black shadow-lg transform translate-x-full transition-transform z-50 md:hidden">
-      <div class="p-4 border-b">
-        <img src="${userSession.foto}" alt="User" class="w-12 h-12 rounded-full mx-auto mb-2">
-        <p class="text-center font-bold">${userSession.nama}</p>
-        <p class="text-center text-sm text-gray-500">${userSession.role}</p>
+      <div class="p-4 border-b text-center">
+        <img src="${userSession.foto || 'https://via.placeholder.com/80'}" class="w-12 h-12 rounded-full mx-auto mb-2">
+        <p class="font-bold">${userSession.nama || 'Tamu'}</p>
+        <p class="text-sm text-gray-500">${userSession.role || 'Publik'}</p>
       </div>
       <div id="drawer-links" class="flex flex-col p-4 text-base space-y-2">
         ${menuLinks(true)}
       </div>
     </div>
 
+    <!-- Backdrop -->
     <div id="drawer-backdrop" class="fixed inset-0 bg-black bg-opacity-40 hidden z-40 md:hidden"></div>
   `
 }
@@ -48,7 +49,8 @@ function menuLinks(isDrawer = false) {
   `
 }
 
-export function initNavbarEvents() {
+// Wajib dipanggil setelah render HTML
+export function NavbarInit() {
   const toggle = document.getElementById('menu-toggle')
   const drawer = document.getElementById('drawer')
   const backdrop = document.getElementById('drawer-backdrop')
@@ -65,12 +67,12 @@ export function initNavbarEvents() {
     })
   }
 
-  // Highlight menu active (optional)
+  // Highlight active link
   const links = document.querySelectorAll('[data-path]')
+  const current = location.hash.replace('#', '') || '/'
   links.forEach(link => {
-    const current = location.hash.replace('#', '') || '/'
     if (link.getAttribute('data-path') === current) {
-      link.classList.add('text-green-600', 'font-semibold')
+      link.classList.add('text-yellow-400', 'font-bold')
     }
   })
 }
